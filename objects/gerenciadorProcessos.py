@@ -6,7 +6,7 @@ class gerenciadorProcessos:
     tabelaProcesso = tabelaProcessos()
     estadoExec = 0
     estadoPronto = [] #queue
-    estadoBloqueado = []
+    estadoBloqueado = [] #queue
 
     def __init__(self):
         self.tempo = 0
