@@ -6,5 +6,9 @@ class tabelaProcessos:
     def __init__(self):
         self.listaProcessos = []
 
-    def adicionarProceso(self,processo,tempoInicio,prioridade,tempoCPU=0):
-        self.listaProcessos.append([processo,tempoInicio,prioridade,tempoCPU])
+    def getLista(self):
+        return self.listaProcessos
+
+    def adicionarProceso(self,processo):
+        self.listaProcessos.append(processo)
+

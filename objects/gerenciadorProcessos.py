@@ -1,9 +1,10 @@
 from objects.tabelaProcessos import tabelaProcessos
+from objects.processoImpressao import *
 from objects.processo import *
 
 class gerenciadorProcessos:
     tempo = 0
-    tabelaProcesso = tabelaProcessos()
+    tabelaProcesso = tabelaProcessos.tabelaProcessos()
     estadoExec = 0
     estadoPronto = [] #queue
     estadoBloqueado = [] #queue
@@ -22,3 +23,9 @@ class gerenciadorProcessos:
     def inserirProcessoExecut(self,processo:processo):
         self.estadoExec = processo.idProcesso
         processo.mudarEstadoProcesso(2)
+
+    def inserirProcesso(self,novoProcesso: processo):
+        self.tabelaProcesso.adicionarProceso(novoProcesso)
+
+    def imprimirProcessos(self,modoDetalhado: bool):
+        ProcessoImpressao(modoDetalhado,self.tabelaProcesso)
