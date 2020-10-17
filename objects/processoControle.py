@@ -11,10 +11,13 @@ class ProcessoControle:
     def criaProcessoGerenciador(self, rpipe):
         print('💧 Processo Gerenciador:', os.getpid(), '\n')
         processoGerenciador = ProcessoGerenciador()
-        fobj = os.fdopen(rpipe, 'r')
-        comando_recebido = os.read(rpipe, 32)
-        print('💧 O processo gerenciador leu do pipe o comando: ' + comando_recebido.decode())
-        processoGerenciador.recebeComandoDoControle(comando_recebido)
+        #fobj = os.fdopen(rpipe, 'r')
+        while(True):
+            comando_recebido = os.read(rpipe, 32)
+            print('💧 O processo gerenciador leu do pipe o comando: ' + comando_recebido.decode())
+            processoGerenciador.recebeComandoDoControle(comando_recebido)
+            if comando_recebido.decode() =='M':
+                exit()
 
     def criaProcessoControle(self):
         # Pipe -> file descriptors r para leitura e w para escrita
@@ -24,19 +27,18 @@ class ProcessoControle:
         if idProcesso > 0:
             # Processo pai: Processo Controle
             comando = ''
-            os.close(rpipe)
+            #os.close(rpipe)
             print('🔥 Processo Controle:', os.getpid(), idProcesso)
-            while(comando != 'M'):
+            while(comando != 'M'.encode()):
                 comando = input().encode()
                 #w = os.fdopen(w, 'w')
                 os.write(wpipe, comando)
                 print('🔥 Comando escrito no pipe para o processo gerenciador: ' + comando.decode())
-                #os.close(w)
-                time.sleep(1)
+                #os.close(wpipe)
 
         elif idProcesso == 0:
             # Processo filho: Processo Gerenciador
-            os.close(wpipe)
+            #os.close(wpipe)
             self.criaProcessoGerenciador(rpipe)
 
 processo = ProcessoControle()

@@ -49,27 +49,6 @@ class ProcessoGerenciador:
         elif(comandoRecebido == 'I'):
             print('💧 O gerenciador de processos vai criar o processo impressão' + '\n')
             # Pipe -> file descriptors r para leitura e w para escrita
-            r, w = os.pipe() 
-
-            # Cria o processo impressao
-            idProcesso = os.fork()
-
-            if idProcesso: 
-                # Processo pai: Processo Gerenciador
-                os.close(r)
-                w = os.fdopen(w, 'w')
-                comando = input('Entre com o D para Impressão Detalhada: ')
-                w.write(comando)
-                w.close()
-
-            else:
-                # Processo filho: Processo Impressão
-                os.close(w)
-                processoImpressao = ProcessoImpressao()
-                r = os.fdopen(r, 'r')
-                comandoRecebido = r.read()
-                print('O processo impressão leu do pipe o comando: ' + comandoRecebido)
-                processoImpressao.recebeComandoDoGerenciador(comandoRecebido, self.tabelaProcesso)
 
         # M: Imprime o tempo médio do ciclo e finaliza o sistema.
         # tempo médio = (soma do tempo de cpu de todos os processos ainda não finalizados) / (todos os processos)
