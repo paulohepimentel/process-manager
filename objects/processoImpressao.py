@@ -1,22 +1,23 @@
-from objects import tabelaProcessos
+from tabelaProcessos import TabelaProcessos
 
 class ProcessoImpressao:
 
-    def __init__(self,modoDetalhado: bool,tabelaPrcesso : tabelaProcessos):
-        if modoDetalhado:
-            self.impressaoDetalhada(tabelaPrcesso)
-        else:
-            self.impressaoSimplificada(tabelaPrcesso)
-
-
     @classmethod #Método da classe
-    def impressaoDetalhada(cls,tabelaPrcesso : tabelaProcessos):
-        for i in tabelaPrcesso.getLista():
-            i.printProcessoDetalhado()
+    def impressaoDetalhada(cls, tabelaProcessos:TabelaProcessos):
+        for processo in tabelaProcessos.retornaLista():
+            processo.imprimeProcessoDetalhado()
         return None
 
-    @classmethod
-    def impressaoSimplificada(cls,tabelaPrcesso : tabelaProcessos):
-        for i in tabelaPrcesso.getLista():
-            i.printProcessoSimplificado()
+    @classmethod  #Método da classe
+    def impressaoSimplificada(cls, tabelaProcessos:TabelaProcessos):
+        for processo in tabelaProcessos.retornaLista():
+            processo.imprimeProcessoSimplificado()
+        return None
+
+    @classmethod  #Método da classe
+    def recebeComandoDoGerenciador(cls, comandoRecebido:str, tabelaProcessos:TabelaProcessos):
+        if (comandoRecebido == 'D'):
+            impressaoDetalhada(tabelaProcessos)
+        else:
+            impressaoSimplificada(tabelaProcessos)
         return None

@@ -1,14 +1,11 @@
-from objects.processo import *
-
-class tabelaProcessos:
+class TabelaProcessos:
     listaProcessos = []
 
     def __init__(self):
         self.listaProcessos = []
 
-    def getLista(self):
+    def retornaLista(self):
         return self.listaProcessos
 
-    def adicionarProceso(self,processo):
+    def adicionarProcesso(self, processo):
         self.listaProcessos.append(processo)
-
