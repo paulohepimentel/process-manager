@@ -4,12 +4,18 @@ class ProcessoImpressao:
 
     @classmethod #Método da classe
     def impressaoDetalhada(cls, tabelaProcessos:TabelaProcessos):
+        if len(tabelaProcessos.retornaLista()) == 0:
+            print("A lista está vazia! \n")
+            return None
         for processo in tabelaProcessos.retornaLista():
             processo.imprimeProcessoDetalhado()
         return None
 
     @classmethod  #Método da classe
     def impressaoSimplificada(cls, tabelaProcessos:TabelaProcessos):
+        if len(tabelaProcessos.retornaLista()) == 0:
+            print("A lista está vazia! \n")
+            return None
         for processo in tabelaProcessos.retornaLista():
             processo.imprimeProcessoSimplificado()
         return None

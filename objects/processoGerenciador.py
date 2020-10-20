@@ -2,12 +2,16 @@ import os
 from tabelaProcessos import TabelaProcessos
 from processoImpressao import ProcessoImpressao
 from processoSimulado import ProcessoSimulado
+from cpu import CPU
+
 
 class ProcessoGerenciador:
 
     def __init__(self):
+        self.idDosProcessos = 0
         self.tempo = 0
         self.estadoExec = 0
+        self.CPU = CPU()
         self.estadoPronto = [] #queue
         self.estadoBloqueado = [] #queue
         self.tabelaProcesso = TabelaProcessos()
@@ -27,9 +31,30 @@ class ProcessoGerenciador:
     def inserirProcessoExec(self, processo:ProcessoSimulado):
         self.estadoExec = processo.idProcesso
         processo.mudarEstadoProcesso(2)
+    
+    def criarProcesso(self):
+        novoProcesso = ProcessoSimulado(self.idDosProcessos,0,self.tempo)
+        self.inserirProcessoNaTabela(novoProcesso)
+        self.idDosProcessos+=1
+        return novoProcesso
+
+    def criarProcessoFilho(self,processo:ProcessoSimulado):
+        processoFilho = ProcessoSimulado(self.idDosProcessos,0,0,processo.idProcesso)
+        self.inserirProcessoNaTabela(processoFilho)
+        self.idDosProcessos+= 1
+
 
     def inserirProcessoNaTabela(self, processo:ProcessoSimulado):
-        self.tabelaProcesso.adicionarProceso(processo)
+        self.tabelaProcesso.adicionarProcesso(processo)
+
+    def removerProcessoNaTabela(self, processo:ProcessoSimulado):
+        self.tabelaProcesso.removerProcesso(processo)
+
+    def imprimirListaProcesso(self):
+        ProcessoImpressao().impressaoSimplificada(self.tabelaProcesso)
+
+    def imprimirListaProcessoDetalhado(self):
+        ProcessoImpressao().impressaoDetalhada(self.tabelaProcesso)
 
     def recebeComandoDoControle(self, comandoRecebido):
         comandoRecebido = comandoRecebido.decode()
@@ -57,3 +82,47 @@ class ProcessoGerenciador:
 
         else:
             print('💧 O gerenciador de processos não reconhece o comando: ' + comandoRecebido + '\n')
+
+    
+    def inserirInstrucao(self,processo,comando):
+        processo.adicionarInstrucao(comando)
+    
+
+    def simularProcesso(self,processo : ProcessoSimulado):
+        for instrucao in processo.instrucoes:
+            instrucaoDividida = instrucao.split()
+            comando = instrucaoDividida[0]
+            #Adicionar uma variável
+            if comando == 'D':
+                processo.declararValor(instrucaoDividida[1])
+            #Subtrai N do valor da variavel X onde N é um inteiro
+            elif comando == 'S':
+                processo.somaValor(instrucaoDividida[1],-instrucaoDividida[2])
+            #Define o valor da variavel inteira X para N onde N é um inteiro
+            elif comando == 'V':
+                processo.setValor(instrucaoDividida[1],instrucaoDividida[2])
+            #Bloqueia o processo
+            elif comando == 'B':
+                self.inserirBloqueado(processo)
+            #Quantas variaveis serão declaradas
+            elif comando == 'N':
+                pass
+            #Termina o processo simulado
+            elif comando == 'T':
+                self.removerProcessoNaTabela(processo)
+                processo.deletarProcesso()
+            #Soma N do valor da variavel X onde N é um inteiro
+            elif comando == 'A':
+                processo.somaValor(instrucaoDividida[1],instrucaoDividida[2])
+            #Cria um processo filho do processo
+            elif comando == 'F':
+                self.criarProcessoFilho(processo)
+            #Substituir o programa (TRoca de contexto)
+            elif comando == 'R':
+                pass
+            #Caso não entre em nenhum dos comandos acima!
+            else:
+                print("Comando Inexistente!\n")
+            processo.adicionarInstrucao(nome)
+            #if self.CPU.passarQuantum():
+                #pass #FICARIA O MUDAR O PROCESO
