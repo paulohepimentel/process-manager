@@ -6,10 +6,10 @@ class ProcessoSimulado:
     instrucoes = []
     tempoInicio = 0
     tempoCPU = 0
-    estadoProcesso = 0 # Bloqueado = 0, Pronto = 1, Em execução = 2 , terminado = 3
+    estadoProcesso = 0 # Bloqueado = 0, Pronto = 1, Em execução = 2 
     prioridade = 0 # 0,1,2,3 sendo que 3 é a mais baixa e 0 a mais alta 
 
-    def __init__(self, id, contador, tempoInicio, idPai=0, estadoProcesso=0):
+    def __init__(self, id, contador, tempoInicio, idPai=0, estadoProcesso=0, prioridade=0):
         self.idProcesso = id
         self.idProcessoPai = idPai
         self.tempoInicio = tempoInicio
@@ -18,7 +18,7 @@ class ProcessoSimulado:
         self.estadoProcesso = estadoProcesso
         self.instrucoes = []
         self.valor = {}
-        self.prioridade = 0 
+        self.prioridade = prioridade 
 
     def deletarProcesso(self):
         self = None
@@ -63,6 +63,8 @@ class ProcessoSimulado:
         print("Tempo de CPU:"+str(self.tempoCPU))
         print("Valores:"+str(self.valor))
         print("Instruções:"+str(self.instrucoes))
+        print("Prioridade:"+str(self.prioridade))
+        print("PC:"+str(self.contadorPrograma))
         print("-----------------------------------------------------")
 
     def imprimeProcessoSimplificado(self):

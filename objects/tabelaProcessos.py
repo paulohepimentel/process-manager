@@ -1,3 +1,6 @@
+from processoSimulado import ProcessoSimulado
+from copy import copy
+
 class TabelaProcessos:
     listaProcessos = []
 
@@ -23,3 +26,7 @@ class TabelaProcessos:
         for processo in self.listaProcessos:
             if processo.idProcesso == idProcesso:
                 return self.listaProcessos.index(processo)
+    
+    def atualizarProcesso(self,processo:ProcessoSimulado):
+        processoAntigo = self.buscarProcessoIndice(processo.idProcesso)
+        processoAntigo = copy(processo)
