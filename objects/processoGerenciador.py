@@ -117,6 +117,7 @@ class ProcessoGerenciador:
             elif comando == 'T':
                 self.removerProcessoNaTabela(self.CPU.processoExecut)
                 processo.deletarProcesso()
+                #return None
             #Soma N do valor da variavel X onde N é um inteiro
             elif comando == 'A':
                 self.CPU.processoExecut.somaValor(int(instrucaoDividida[1]),int(instrucaoDividida[2]))
@@ -128,33 +129,35 @@ class ProcessoGerenciador:
                 pass
             #Caso não entre em nenhum dos comandos acima!
             else:
-                print("Comando Inexistente!\n")            
-            
+                print("Comando Inexistente!\n")
+
+            #self.CPU.processoExecut.imprimeProcessoDetalhado()
+
             if self.CPU.passarQuantum() and self.CPU.processoExecut.instrucoes != []:
-                processo = deepcopy(self.CPU.processoExecut)
+                processo = (self.CPU.processoExecut)
                 processo.mudarEstadoProcesso(0)
                 self.tabelaProcesso.atualizarProcesso(processo)
 
-                return None
+                return processo
                 #pass #FICARIA O MUDAR O PROCESO
 
-        processo = deepcopy(self.CPU.processoExecut)
+        processo = (self.CPU.processoExecut)
         processo.mudarEstadoProcesso(1)
         self.tabelaProcesso.atualizarProcesso(processo)
+        return processo
 
-"""
+
 PG = ProcessoGerenciador()
 ProcessoA = PG.criarProcesso()
 PG.inserirInstrucao(ProcessoA,"D 0")
 PG.inserirInstrucao(ProcessoA,"D 1")
 PG.inserirInstrucao(ProcessoA,"V 0 1000")
 PG.inserirInstrucao(ProcessoA,"V 1 500")
-PG.inserirInstrucao(ProcessoA,"A 0 19")
-PG.inserirInstrucao(ProcessoA,"F 1")
+#PG.inserirInstrucao(ProcessoA,"A 0 19")
+#PG.inserirInstrucao(ProcessoA,"F 1")
 
-PG.simularProcesso(ProcessoA)
-PG.simularProcesso(ProcessoA)
-PG.simularProcesso(ProcessoA)
+ProcessoA = PG.simularProcesso(ProcessoA)
+ProcessoA = PG.simularProcesso(ProcessoA)
+#PG.simularProcesso(ProcessoA)
 
 PG.imprimirListaProcessoDetalhado()
-"""

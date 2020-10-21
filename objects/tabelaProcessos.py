@@ -1,5 +1,5 @@
 from processoSimulado import ProcessoSimulado
-from copy import copy
+from copy import deepcopy
 
 class TabelaProcessos:
     listaProcessos = []
@@ -29,4 +29,4 @@ class TabelaProcessos:
     
     def atualizarProcesso(self,processo:ProcessoSimulado):
         processoAntigo = self.buscarProcessoIndice(processo.idProcesso)
-        processoAntigo = copy(processo)
+        self.listaProcessos[processoAntigo] = deepcopy(processo)

@@ -26,9 +26,9 @@ class CPU:
     def mudarProcesso(self,processo : ProcessoSimulado):
         #COMENTÁRIO PRA ESTELA NÃO ESQUECER
         #QUANDO ACABAR O PROCESSO DEVEMOS RETORNAR TODOS OS VALORES USADOS PELA CPU
-        self.processoExecut = copy(processo)
+        self.processoExecut = deepcopy(processo)
         self.quantumUsado = 0
-        self.pcAtual = processo.contadorPrograma
+        self.pcAtual = self.processoExecut.contadorPrograma
 
     def executarInstruction(self):
         #Executar processo
