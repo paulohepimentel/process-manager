@@ -38,6 +38,7 @@ class TabelaProcessos:
             if i.estadoProcesso == 0:
                 vetorBloqueado.append(i.idProcesso)
         return vetorBloqueado
+        
 """
 tp = TabelaProcessos()
 tp.adicionarProcesso(ProcessoSimulado(1,2,0,0,0,0))

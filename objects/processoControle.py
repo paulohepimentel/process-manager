@@ -20,7 +20,8 @@ class ProcessoControle:
                 exit()
 
     def criaProcessoControle(self):
-        # Pipe -> file descriptors r para leitura e w para escrita            time.sleep(1)
+        # Pipe -> file descriptors r para leitura e w para escrita            
+        # time.sleep(1)
 
         rpipe, wpipe = os.pipe()
         idProcesso = os.fork()

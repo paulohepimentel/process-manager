@@ -79,7 +79,7 @@ class ProcessoGerenciador:
             comandoRecebido = input("Esperando você digitar seu comando SEU LINDO! \n")
 
             # U: Fim de uma unidade de tempo, enquanto não ocorre o fim, o tempo
-            # está parado. O tempo passa quando o comando U é recebido.
+            # está parado. O tempo passa quando o comando U é recebido
             if(comandoRecebido == 'U'):
                 print('💧 O gerenciador de processos incrementou o tempo' + '\n')
                 return False
