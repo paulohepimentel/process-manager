@@ -1,3 +1,5 @@
+#Alunos: Estela Miranda, João Marcos, Paulo Pimentel
+
 class ProcessoSimulado:
     idProcesso = 0
     idProcessoPai = 0

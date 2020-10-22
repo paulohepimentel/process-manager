@@ -1,3 +1,5 @@
+#Alunos: Estela Miranda, João Marcos, Paulo Pimentel
+
 import os
 import time
 from tabelaProcessos import TabelaProcessos

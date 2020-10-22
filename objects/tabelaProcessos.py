@@ -1,3 +1,5 @@
+#Alunos: Estela Miranda, João Marcos, Paulo Pimentel
+
 from processoSimulado import ProcessoSimulado
 from copy import deepcopy
 
@@ -38,7 +40,7 @@ class TabelaProcessos:
             if i.estadoProcesso == 0:
                 vetorBloqueado.append(i.idProcesso)
         return vetorBloqueado
-        
+
 """
 tp = TabelaProcessos()
 tp.adicionarProcesso(ProcessoSimulado(1,2,0,0,0,0))
