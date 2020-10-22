@@ -20,7 +20,8 @@ class ProcessoControle:
                 exit()
 
     def criaProcessoControle(self):
-        # Pipe -> file descriptors r para leitura e w para escrita
+        # Pipe -> file descriptors r para leitura e w para escrita            time.sleep(1)
+
         rpipe, wpipe = os.pipe()
         idProcesso = os.fork()
 
@@ -30,7 +31,7 @@ class ProcessoControle:
             #os.close(rpipe)
             print('🔥 Processo Controle:', os.getpid(), idProcesso)
             while(comando != 'M'.encode()):
-                comando = input().encode()
+                comando = input("Mensagme pra teste\n").encode()
                 #w = os.fdopen(w, 'w')
                 os.write(wpipe, comando)
                 print('🔥 Comando escrito no pipe para o processo gerenciador: ' + comando.decode())
