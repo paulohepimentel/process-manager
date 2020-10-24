@@ -1,5 +1,3 @@
-#Alunos: Estela Miranda, João Marcos, Paulo Pimentel
-
 class ProcessoSimulado:
     idProcesso = 0
     idProcessoPai = 0
@@ -8,7 +6,7 @@ class ProcessoSimulado:
     instrucoes = []
     tempoInicio = 0
     tempoCPU = 0
-    estadoProcesso = 0 # Bloqueado = 0, Pronto = 1, Em execução =2
+    estadoProcesso = 0 # Bloqueado = 0, Pronto = 1, Em execução = 2 
     prioridade = 0 # 0,1,2,3 sendo que 3 é a mais baixa e 0 a mais alta 
 
     def __init__(self, id, contador, tempoInicio, idPai=0, estadoProcesso=0, prioridade=0):
@@ -65,6 +63,7 @@ class ProcessoSimulado:
         if self.prioridade == 0:
             return None
         self.prioridade-=1
+
 
     def imprimeProcessoDetalhado(self):
         print("-----------------------------------------------------")

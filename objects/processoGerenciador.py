@@ -1,5 +1,3 @@
-#Alunos: Estela Miranda, João Marcos, Paulo Pimentel
-
 import os
 import time
 from tabelaProcessos import TabelaProcessos
@@ -30,6 +28,9 @@ class ProcessoGerenciador:
 
     def atualizarEstadosBloqueado(self):
         self.estadoBloqueado = self.tabelaProcesso.ordenarProcessoBloqueados()
+    
+    def atualizarEstadosBloqueadoNumInstruct(self):
+        self.estadoBloqueado = self.tabelaProcesso.ordenarNumeroInstrucoes()
 
     def inserirPronto(self, processo:ProcessoSimulado):
         self.estadoPronto.append(processo.idProcesso)
@@ -76,13 +77,23 @@ class ProcessoGerenciador:
     def imprimirListaProcessoDetalhado(self):
         ProcessoImpressao().impressaoDetalhada(self.tabelaProcesso)
 
+    def calculaTempoMedioCiclo(self):
+        soma = 0
+        tamTabela = 0
+        for processo in self.tabelaProcesso.listaProcessos:
+            tamTabela+=1
+            if processo.estadoProcesso != 1:
+                soma += int(processo.tempoCPU)
+        return float(soma/tamTabela)
+
     def inputComandoDoControle(self):
         while(True):
             comandoRecebido = input("Esperando você digitar seu comando SEU LINDO! \n")
 
             # U: Fim de uma unidade de tempo, enquanto não ocorre o fim, o tempo
-            # está parado. O tempo passa quando o comando U é recebido
+            # está parado. O tempo passa quando o comando U é recebido.
             if(comandoRecebido == 'U'):
+                self.tempo+=1
                 print('💧 O gerenciador de processos incrementou o tempo' + '\n')
                 return False
 
@@ -112,6 +123,7 @@ class ProcessoGerenciador:
             # M: Imprime o tempo médio do ciclo e finaliza o sistema.
             # tempo médio = (soma do tempo de cpu de todos os processos ainda não finalizados) / (todos os processos)
             elif(comandoRecebido == 'M'):
+                print("Tempo médio:"+str(self.calculaTempoMedioCiclo()))
                 exit()
                 print('💧 O gerenciador de processos vai imprimir o tempo médio e encerrar o sistema' + '\n')
             
@@ -126,6 +138,7 @@ class ProcessoGerenciador:
 
     def simularProcesso(self,processo : ProcessoSimulado):
         #A tabela de processos só é atualziada depois da execução do processo
+        processo.mudarEstadoProcesso
         self.CPU.mudarProcesso(processo)
 
         while self.CPU.processoExecut.instrucoes != []:
@@ -192,11 +205,31 @@ class ProcessoGerenciador:
 
     def executarAltaPrioridade(self):
         self.atualizarEstadosBloqueado()
-        processoReferente = self.tabelaProcesso.buscarProcesso(self.estadoBloqueado[0])
-        print("Executando o processo de ID:"+str(self.estadoBloqueado[0]))
-        self.simularProcesso(processoReferente)
-        if self.estadoBloqueado != []:
-            self.executarAltaPrioridade()
+        if self.estadoBloqueado == []:
+            if self.inputComandoDoControle():
+                print("Erro! Não existem mais itens na fila de itens bloqeuados! Você pode imprimir o estado atual ou sair do código!")
+            else:
+                print("Erro! Não existem mais itens na fila de itens bloqeuados! Você pode imprimir o estado atual ou sair do código!")
+        else:
+            processoReferente = self.tabelaProcesso.buscarProcesso(self.estadoBloqueado[0])
+            print("Executando o processo de ID:"+str(self.estadoBloqueado[0]))
+            self.simularProcesso(processoReferente)
+            #if self.estadoBloqueado != []:
+        self.executarAltaPrioridade()
+
+    def executarMenorNumInstruct(self):
+        self.atualizarEstadosBloqueadoNumInstruct()
+        if self.estadoBloqueado == []:
+            if self.inputComandoDoControle():
+                print("Erro! Não existem mais itens na fila de itens bloqeuados! Você pode imprimir o estado atual ou sair do código!")
+            else:
+                print("Erro! Não existem mais itens na fila de itens bloqeuados! Você pode imprimir o estado atual ou sair do código!")
+        else:
+            processoReferente = self.tabelaProcesso.buscarProcesso(self.estadoBloqueado[0])
+            print("Executando o processo de ID:"+str(self.estadoBloqueado[0]))
+            self.simularProcesso(processoReferente)
+            #if self.estadoBloqueado != []:
+        self.executarAltaPrioridade()
 
 PG = ProcessoGerenciador()
 ProcessoA = PG.criarProcesso()
@@ -211,7 +244,7 @@ PG.inserirInstrucao(ProcessoA,"V 0 19")
 #PG.inserirInstrucao(ProcessoA,"A 0 19")
 #PG.inserirInstrucao(ProcessoA,"F 1")
 
-PG.executarAltaPrioridade()
+PG.executarMenorNumInstruct()
 
 print(PG.estadoPronto)
 PG.imprimirListaProcessoDetalhado()
