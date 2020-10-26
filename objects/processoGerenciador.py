@@ -88,13 +88,23 @@ class ProcessoGerenciador:
 
     def inputComandoDoControle(self):
         while(True):
-            comandoRecebido = input("Esperando você digitar seu comando SEU LINDO! \n")
+            print("\n-----------------------------------------------------------")
+            print("\t\t\tMENU")
+            print("-----------------------------------------------------------")
+            print("💻 U, passa uma unidade de tempo")
+            print("💻 L, desbloqueia o primeiro processo na fila bloqueada")
+            print("💻 I, imprime o estado do sistema")
+            print("💻 M, imprime o tempo médio de ciclo e encerra")
+            print("-----------------------------------------------------------")
+            comandoRecebido = input("💻 Comando Escolhido: ")
+            print("-----------------------------------------------------------\n")
 
             # U: Fim de uma unidade de tempo, enquanto não ocorre o fim, o tempo
             # está parado. O tempo passa quando o comando U é recebido.
             if(comandoRecebido == 'U'):
                 self.tempo+=1
-                print('💧 O gerenciador de processos incrementou o tempo' + '\n')
+                print('⏰ O Gerenciador de Processos incrementou o tempo' + '\n')
+                print("⏰ Tempo Atual: "+str(self.tempo))
                 return False
 
             # L: Desbloqueia o primeiro processo simulado na fila bloqueada.
@@ -104,31 +114,47 @@ class ProcessoGerenciador:
 
             # I: Imprime o estado atual do sistema.
             elif(comandoRecebido == 'I'):
-                print('💧 O gerenciador de processos vai criar o processo impressão' + '\n')
+                print('💧 O gerenciador de processos vai criar o processo impressão')
+                print("💧 Escolha D para Impressão Detalhada")
+                print("💧 Escolha S para Impressão Simplificada")
+                tipoImpressao = input("💧 Opção Escolhida: ")
+                print("\n")
+
                 # Pipe -> file descriptors r para leitura e w para escrita
-                tipoImpressao = input("Digite D para impressão detalhada ou qualquer outro carácter para impressão simples:")
                 idProcesso = os.fork()
+                
                 if idProcesso != 0:
                     time.sleep(.1)
                     #thrownAway = input("Digite qualquer tecla para continuar! Este comando será desconsiderado!")
 
                 if idProcesso == 0:
                     if(tipoImpressao == 'D'):
+                        print("\t\t\t\t  TABELA DE PROCESSOS")
+                        print("---------------------------------------------------------------------------------------------------")
+                        print("idProcesso\tidProcessoPai\tEstado\t\tTempo Inicial\tTempoCPU\tValores")
+                        print("---------------------------------------------------------------------------------------------------")
                         ProcessoImpressao.impressaoDetalhada(self.tabelaProcesso)
+                        print("\n")
+
                     else:
+                        print("          TABELA DE PROCESSOS")
+                        print("--------------------------------------------")
+                        print("idProcesso\tEstado")
+                        print("--------------------------------------------")
                         ProcessoImpressao.impressaoSimplificada(self.tabelaProcesso)
+                        print("\n")
                     exit()
                         
 
             # M: Imprime o tempo médio do ciclo e finaliza o sistema.
             # tempo médio = (soma do tempo de cpu de todos os processos ainda não finalizados) / (todos os processos)
             elif(comandoRecebido == 'M'):
-                print("Tempo médio:"+str(self.calculaTempoMedioCiclo()))
+                print('⏰ Tempo Médio do Ciclo: %.4f' % (self.calculaTempoMedioCiclo()))
+                print("👋 Encerrando Sistema!")
                 exit()
-                print('💧 O gerenciador de processos vai imprimir o tempo médio e encerrar o sistema' + '\n')
             
             else:
-                print('💧 O gerenciador de processos não reconhece o comando: ' + comandoRecebido + '\n')
+                print('❌ O gerenciador de processos não reconhece o comando: ' + comandoRecebido + '\n')
 
 
     
@@ -144,35 +170,45 @@ class ProcessoGerenciador:
         while self.CPU.processoExecut.instrucoes != []:
             if self.inputComandoDoControle():
                 return None
+
             instrucao = self.CPU.processoExecut.instrucoes.pop(0)
             instrucaoDividida = instrucao.split()
             comando = instrucaoDividida[0]
+
             #Adicionar uma variável
             if comando == 'D':
                 self.CPU.processoExecut.declararValor(int(instrucaoDividida[1]))
+
             #Subtrai N do valor da variavel X onde N é um inteiro
             elif comando == 'S':
                 self.CPU.processoExecut.somaValor(int(instrucaoDividida[1]),-int(instrucaoDividida[2]))
+            
             #Define o valor da variavel inteira X para N onde N é um inteiro
             elif comando == 'V':
                 self.CPU.processoExecut.setValor(int(instrucaoDividida[1]),int(instrucaoDividida[2]))
+            
             #Bloqueia o processoinstrucaoDividida[2]
             elif comando == 'B':
                 self.inserirBloqueado(self.CPU.processoExecut)
+            
             #Quantas variaveis serão declaradas
             elif comando == 'N':
                 pass
+            
             #Termina o processo simulado
             elif comando == 'T':
                 self.removerProcessoNaTabela(self.CPU.processoExecut)
                 processo.deletarProcesso()
                 #return NoneD 0
+            
             #Soma N do valor da variavel X onde N é um inteiro
             elif comando == 'A':
                 self.CPU.processoExecut.somaValor(int(instrucaoDividida[1]),int(instrucaoDividida[2]))
+            
             #Cria um processo filho do processo
             elif comando == 'F':
                 self.criarProcessoFilho(self.CPU.processoExecut,int(instrucaoDividida[1]))
+            
             #Substituir o programa (TRoca de contexto)
             elif comando == 'R':
                 self.substituirImagemProcesso(self.CPU.processoExecut,str(instrucaoDividida[1]))
@@ -207,14 +243,14 @@ class ProcessoGerenciador:
         self.atualizarEstadosBloqueado()
         if self.estadoBloqueado == []:
             if self.inputComandoDoControle():
-                print("Erro! Não existem mais itens na fila de itens bloqeuados! Você pode imprimir o estado atual ou sair do código!")
+                print("❌ Erro! Não existem mais itens na fila de itens bloqeuados! Você pode imprimir o estado atual ou sair do código!")
             else:
-                print("Erro! Não existem mais itens na fila de itens bloqeuados! Você pode imprimir o estado atual ou sair do código!")
+                print("❌ Erro! Não existem mais itens na fila de itens bloqeuados! Você pode imprimir o estado atual ou sair do código!")
         else:
             processoReferente = self.tabelaProcesso.buscarProcesso(self.estadoBloqueado[0])
-            print("Executando o processo de ID:"+str(self.estadoBloqueado[0]))
+            print("\n💾 Executando o processo de ID: "+str(self.estadoBloqueado[0]))
             self.simularProcesso(processoReferente)
-            #if self.estadoBloqueado != []:
+
         self.executarAltaPrioridade()
 
     def executarMenorNumInstruct(self):
@@ -226,25 +262,25 @@ class ProcessoGerenciador:
                 print("Erro! Não existem mais itens na fila de itens bloqeuados! Você pode imprimir o estado atual ou sair do código!")
         else:
             processoReferente = self.tabelaProcesso.buscarProcesso(self.estadoBloqueado[0])
-            print("Executando o processo de ID:"+str(self.estadoBloqueado[0]))
+            print("\n💾 Executando o processo de ID: "+str(self.estadoBloqueado[0]))
             self.simularProcesso(processoReferente)
-            #if self.estadoBloqueado != []:
+
         self.executarAltaPrioridade()
 
 PG = ProcessoGerenciador()
 ProcessoA = PG.criarProcesso()
 ProcessoB = PG.criarProcesso()
+ProcessoC = PG.criarProcesso()
 #PG.inserirInstrucao(ProcessoA,"R arquivo.txt")
-
 PG.inserirInstrucao(ProcessoA,"D 0")
 PG.inserirInstrucao(ProcessoA,"D 1")
 PG.inserirInstrucao(ProcessoA,"V 0 1000")
 PG.inserirInstrucao(ProcessoA,"V 1 500")
 PG.inserirInstrucao(ProcessoA,"V 0 19")
-#PG.inserirInstrucao(ProcessoA,"A 0 19")
-#PG.inserirInstrucao(ProcessoA,"F 1")
-
+PG.inserirInstrucao(ProcessoA,"A 0 19")
+PG.inserirInstrucao(ProcessoA,"F 1")
+PG.inserirInstrucao(ProcessoB,"D 0")
+PG.inserirInstrucao(ProcessoB,"D 1")
+PG.inserirInstrucao(ProcessoB,"A 0 19")
+PG.inserirInstrucao(ProcessoB,"F 1")
 PG.executarMenorNumInstruct()
-
-print(PG.estadoPronto)
-PG.imprimirListaProcessoDetalhado()

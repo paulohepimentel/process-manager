@@ -47,21 +47,3 @@ class TabelaProcessos:
             if i.estadoProcesso == 0:
                 vetorBloqueado.append(i.idProcesso)
         return vetorBloqueado
-
-tp = TabelaProcessos()
-processo = ProcessoSimulado(18,2,0,0,0,0)
-processo.adicionarInstrucao("INSTRUCTION")
-processo.adicionarInstrucao("INSTRUCTION")
-processo.adicionarInstrucao("INSTRUCTION")
-processo2 = ProcessoSimulado(13,2,0,0,0,0)
-processo2.adicionarInstrucao("INSTRUCTION")
-processo2.adicionarInstrucao("INSTRUCTION")
-tp.adicionarProcesso(processo)
-tp.adicionarProcesso(processo2)
-
-tp.adicionarProcesso(ProcessoSimulado(2,2,0,0,0,3))
-tp.adicionarProcesso(ProcessoSimulado(3,2,0,0,0,2))
-tp.adicionarProcesso(ProcessoSimulado(4,2,0,0,0,1))
-print(tp.ordenarNumeroInstrucoes()) 
-#for i in tp.listaProcessos:
- #   i.imprimeProcessoDetalhado()

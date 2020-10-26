@@ -7,6 +7,7 @@ class ProcessoImpressao:
         if len(tabelaProcessos.retornaLista()) == 0:
             print("A lista está vazia! \n")
             return None
+            
         for processo in tabelaProcessos.retornaLista():
             processo.imprimeProcessoDetalhado()
         return None
@@ -16,6 +17,7 @@ class ProcessoImpressao:
         if len(tabelaProcessos.retornaLista()) == 0:
             print("A lista está vazia! \n")
             return None
+
         for processo in tabelaProcessos.retornaLista():
             processo.imprimeProcessoSimplificado()
         return None

@@ -66,20 +66,9 @@ class ProcessoSimulado:
 
 
     def imprimeProcessoDetalhado(self):
-        print("-----------------------------------------------------")
-        print("idProcesso :"+str(self.idProcesso))
-        print("Id do Processo Pai:"+str(self.idProcessoPai))
-        print("Estado:"+self.retornaEstado())
-        print("Tempo Inicial:"+str(self.tempoInicio))
-        print("Tempo de CPU:"+str(self.tempoCPU))
-        print("Valores:"+str(self.valor))
-        print("Instruções:"+str(self.instrucoes))
-        print("Prioridade:"+str(self.prioridade))
-        print("PC:"+str(self.contadorPrograma))
-        print("-----------------------------------------------------")
+        print("%s\t\t%s\t\t%s\t\t%s\t\t%s" % (str(self.idProcesso), str(self.idProcessoPai), self.retornaEstado(), str(self.tempoInicio), str(self.tempoCPU) +"\t\t"+str(self.valor)))
+        print("---------------------------------------------------------------------------------------------------")
 
     def imprimeProcessoSimplificado(self):
-        print("-----------------------------------------------------")
-        print("idProcesso :"+str(self.idProcesso))
-        print("Estado:"+self.retornaEstado())
-        print("-----------------------------------------------------")
+        print("%s\t\t%s" % (str(self.idProcesso), str(self.retornaEstado())))
+        print("--------------------------------------------")
