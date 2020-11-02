@@ -1,5 +1,5 @@
-from gerenciadorProcessos import GerenciadorProcessos
-from processoSimulado import ProcessoSimulado
+from objects.processoGerenciador import GerenciadorProcessos
+from objects.processoSimulado import ProcessoSimulado
 
 ger = GerenciadorProcessos()
 ger.inserirProcesso(ProcessoSimulado(21, 1024, 0, 0, 1))

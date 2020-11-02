@@ -1,31 +1,30 @@
 from tabelaProcessos import TabelaProcessos
-
+from prettytable import PrettyTable
 class ProcessoImpressao:
 
-    @classmethod #Método da classe
-    def impressaoDetalhada(cls, tabelaProcessos:TabelaProcessos):
+    def __init__(self):
+        print('\t\t\t🟢🟢🟢 Iniciando o Processo Impressão! 🟢🟢🟢\n')
+
+    def impressaoDetalhada(self, tabelaProcessos):
         if len(tabelaProcessos.retornaLista()) == 0:
-            print("A lista está vazia! \n")
+            print("\t\tOs processos foram concluídos. A tabela de processos está vazia!")
             return None
-            
+        print('📑 Tabela de Processos - Modo Detalhado')
+        tabela = PrettyTable(['idProcesso', 'idProcessoPai', 'Prioridade', 'Estado', 'Tempo Inicial', 'TempoCPU', 'Valores'])
         for processo in tabelaProcessos.retornaLista():
-            processo.imprimeProcessoDetalhado()
+            dadosDoProcesso = processo.imprimeProcessoDetalhado()
+            tabela.add_row(dadosDoProcesso)
+        print(tabela)
         return None
 
-    @classmethod  #Método da classe
-    def impressaoSimplificada(cls, tabelaProcessos:TabelaProcessos):
+    def impressaoSimplificada(self, tabelaProcessos):
         if len(tabelaProcessos.retornaLista()) == 0:
-            print("A lista está vazia! \n")
+            print("\t\tOs processos foram concluídos. A tabela de processos está vazia!")
             return None
-
+        print('📑 Tabela de Processos - Modo Simplificado')
+        tabela = PrettyTable(['idProcesso', 'Prioridade', 'Estado'])
         for processo in tabelaProcessos.retornaLista():
-            processo.imprimeProcessoSimplificado()
-        return None
-
-    @classmethod  #Método da classe
-    def recebeComandoDoGerenciador(cls, comandoRecebido:str, tabelaProcessos:TabelaProcessos):
-        if (comandoRecebido == 'D'):
-            impressaoDetalhada(tabelaProcessos)
-        else:
-            impressaoSimplificada(tabelaProcessos)
+            dadosDoProcesso = processo.imprimeProcessoSimplificado()
+            tabela.add_row(dadosDoProcesso)
+        print(tabela)
         return None
