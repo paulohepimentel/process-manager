@@ -241,7 +241,9 @@ class ProcessoGerenciador:
 
                 # 7. Comando T: Termina o processo simulado
                 elif comando == 'T':
+                    self.estadoPronto.remove(self.processoSimulado.idProcesso)
                     self.tabelaProcesso.removerProcesso(self.processoSimulado)
+                    self.processoSimulado = None
 
                 # 8. Comando F: Cria um novo processo simulado filho
                 elif comando == 'F':
@@ -255,22 +257,22 @@ class ProcessoGerenciador:
                     self.substituirImagemProcessoAtual(str(instrucaoDividida[1]), self.processoSimulado)
 
             self.tempoCPU += 1
-            self.processoSimulado.tempoCPU += 1
-            self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
-
-            if self.processoSimulado.instrucoes == []:
-                # As instruções do processo foram concluídas, remover o processo
-                self.estadoPronto.remove(self.processoSimulado.idProcesso)
-                self.tabelaProcesso.removerProcesso(self.processoSimulado)
-                self.processoSimulado = None
-
-            if self.CPU.passarQuantum() and self.processoSimulado.instrucoes != []:
-                # Processo gastou o quantum disponível
-                #self.CPU.quantumUsado = 0
-                self.processoSimulado.incrementarPrioridade()
+            if comando != 'T':
+                self.processoSimulado.tempoCPU += 1
                 self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
-                self.escalonadorDeProcessos()
 
-            if comando == 'B':
-                self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
-                self.escalonadorDeProcessos()
+                if self.processoSimulado.instrucoes == []:
+                    # As instruções do processo foram concluídas, remover o processo
+                    self.estadoPronto.remove(self.processoSimulado.idProcesso)
+                    self.tabelaProcesso.removerProcesso(self.processoSimulado)
+                    self.processoSimulado = None
+
+                if self.CPU.passarQuantum() and self.processoSimulado.instrucoes != []:
+                    # Processo gastou o quantum disponível
+                    self.processoSimulado.incrementarPrioridade()
+                    self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
+                    self.escalonadorDeProcessos()
+
+                if comando == 'B':
+                    self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
+                    self.escalonadorDeProcessos()
