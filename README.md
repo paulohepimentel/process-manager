@@ -62,7 +62,7 @@ momento, é composto pelos valores da suas variáveis inteiras e pelo valor do s
 contador de programa.
 </p>
 
-## ✦ Politica de Escalonamento
+## ✦ Política de Escalonamento
 <p align="justify">
 A política de escalonamento tem como princípio a ideia de atribuir aos processos, 
 determinadas prioridades de acordo com o seu número de execuções. Dessa maneira, 
