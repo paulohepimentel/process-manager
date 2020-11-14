@@ -1,3 +1,5 @@
+
+
 class ProcessoSimulado:
 
     idProcesso = 0
@@ -8,7 +10,7 @@ class ProcessoSimulado:
     prioridade = 0 # 0,1,2,3 sendo que 3 é a mais baixa e 0 a mais alta
     tempoCPU = 0
     instrucoes = []
-    variaveis = {}
+    # variaveis = {}
 
     def __init__(self, idProcesso, contadorPrograma, tempoInicio, idPai=0, estado=0, prioridade=0):
         self.idProcesso = idProcesso
@@ -19,10 +21,11 @@ class ProcessoSimulado:
         self.prioridade = prioridade
         self.tempoCPU = 0
         self.instrucoes = []
-        self.variaveis = {}
+        # self.variaveis = {}
 
 
     # * Os tipos de instruções que um processo simulado pode executar dentro da CPU
+    '''
     # 2. Comando D: Declara uma variável inteira X, valor inicial igual a 0
     def declaraVariavel(self, indice):
         self.variaveis[indice] = 0
@@ -37,6 +40,7 @@ class ProcessoSimulado:
         antigoValor = self.variaveis[indice]
         novoValor = antigoValor + valor
         self.defineValor(indice, novoValor)
+    '''
 
     # * Métodos relacionados a manipulação dos estados dos processos    
     def retornaEstado(self):

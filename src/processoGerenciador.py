@@ -4,6 +4,8 @@ from cpu import CPU
 from processoImpressao import ProcessoImpressao
 from processoSimulado import ProcessoSimulado
 from tabelaProcessos import TabelaProcessos
+from variavelProcesso import VariavelProcesso
+from memoria import Memoria
 
 class ProcessoGerenciador:
 
@@ -17,6 +19,9 @@ class ProcessoGerenciador:
         self.estadoPronto = []
         self.estadoBloqueado = []
         self.tabelaProcesso = TabelaProcessos()
+        
+        self.memoriaPrimaria = Memoria()
+        self.memoriaSecundaria = Memoria()
 
         # Definição da opção de escalonamento
         print('Como você gostaria que os processos fossem escalonados?')
@@ -79,6 +84,14 @@ class ProcessoGerenciador:
             if idProcesso == 0:
                 self.modoDeImpressao = os.read(rpipe, 32)
                 self.modoDeImpressao = self.modoDeImpressao.decode()
+
+                '''
+                    - número médio de fragmentos externos;
+                    - tempo médio de alocação em termos de número médio de nós percorridos na alocação;
+                    - o percentual de vezes que uma requisição de alocação é negada. Neste caso o processo
+                    ficaria bloqueado com uma flag de espera por memória. Quando houvesse a liberação de
+                    memória por um processo, a alocação deste processo poderia ser tentada novamente.
+                '''
 
                 processoImpressao = ProcessoImpressao()
 
@@ -203,14 +216,32 @@ class ProcessoGerenciador:
 
                 # ​1. Comando N: número de variáveis que serão declaradas neste processo simulado
                 if comando == 'N':
-                    # Instrução abstraída pela linguagem
-                    pass
+                    numDeVariveis = int(instrucaoDividida[1])
+                    variaveisDoProcesso = []
+                    for i in range(numDeVariveis):
+                        variavel = VariavelProcesso(self.processoSimulado.idProcesso)
+                        variaveisDoProcesso.append(variavel)
+
+                    memoriaTemEspaco = self.memoriaPrimaria.algoritmoWorstFit(variaveisDoProcesso)
+                    if(not memoriaTemEspaco):
+                        '''
+                            Processo é bloqueado e entra para a memória secundária com a flag de 
+                            requisição de espaço (flag pode ser abstraída, já que se o processo foi 
+                            bloqueado ele está aguardando a memória primária).
+                        '''
+                        pass
 
                 # 2. Comando D: Declara uma variável inteira X, valor inicial igual a 0
                 elif comando == 'D':
+                    '''
                     self.processoSimulado.declaraVariavel(
                         indice = int(instrucaoDividida[1])
                     )
+                    for v in variaveisDoProcesso:
+                        if v.nome == None:
+                            v.nome =
+                    '''
+
 
                 # 3. Comando V: Define o valor da variável inteira x
                 elif comando == 'V':
