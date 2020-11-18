@@ -1,6 +1,7 @@
 from processoSimulado import ProcessoSimulado
 from tabelaProcessos import TabelaProcessos
 from copy import deepcopy
+from variavelProcesso import VariavelProcesso
 
 class CPU:
     quantumUsado = 0
@@ -31,5 +32,5 @@ class CPU:
     def declararValor(self, processoSimulado, indice):
         processoSimulado.declararValor(indice)
 
-    def somaValor(self, processoSimulado, indice, valor):
-        processoSimulado.somaValor(indice, valor)
+    def somaValor(self, variavel:VariavelProcesso, valor):
+        variavel.valor+=valor

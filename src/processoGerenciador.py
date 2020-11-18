@@ -6,6 +6,7 @@ from processoSimulado import ProcessoSimulado
 from tabelaProcessos import TabelaProcessos
 from variavelProcesso import VariavelProcesso
 from memoria import Memoria
+from copy import deepcopy
 
 class ProcessoGerenciador:
 
@@ -20,8 +21,8 @@ class ProcessoGerenciador:
         self.estadoBloqueado = []
         self.tabelaProcesso = TabelaProcessos()
         
-        self.memoriaPrimaria = Memoria()
-        self.memoriaSecundaria = Memoria()
+        self.memoriaPrimaria = Memoria(10)
+        self.memoriaSecundaria = Memoria(0)
 
         # Definição da opção de escalonamento
         print('Como você gostaria que os processos fossem escalonados?')
@@ -139,7 +140,15 @@ class ProcessoGerenciador:
                 estado = 1, # Pronto
                 prioridade = self.processoSimulado.prioridade
             )
-            processoSimulado.variaveis = self.processoSimulado.variaveis.copy()
+            variaveisPai = deepcopy(self.memoriaPrimaria.buscarVariavelDoProcesso(processoSimulado.idProcessoPai))
+            
+            for i in variaveisPai:
+                i.idProcesso = processoSimulado.idProcesso
+
+            if not self.memoriaPrimaria.algoritmoWorstFit(variaveisPai):
+                self.memoriaSecundaria.inserirSecundariaVect(variaveisPai)
+
+            #processoSimulado.variaveis = self.processoSimulado.variaveis.copy()
             processoSimulado.instrucoes = self.processoSimulado.instrucoes.copy()
             self.tabelaProcesso.adicionarProcesso(processoSimulado)
             self.inserirNaListaDeProntos(processoSimulado)
@@ -150,7 +159,7 @@ class ProcessoGerenciador:
     def substituirImagemProcessoAtual(self, arquivo, processoSimulado):
         processoSimulado.contadorPrograma = 0
         processoSimulado.instrucoes = []
-        processoSimulado.variaveis = {}
+        #processoSimulado.variaveis = {}
         
         with open(arquivo) as file:
             for line in file:
@@ -233,6 +242,8 @@ class ProcessoGerenciador:
 
                 # 2. Comando D: Declara uma variável inteira X, valor inicial igual a 0
                 elif comando == 'D':
+                    nomeVar = int(instrucaoDividida[1])
+                    variavel = self.memoriaPrimaria.preencherVariavel(self.processoSimulado.idProcesso,nomeVar,0)
                     '''
                     self.processoSimulado.declaraVariavel(
                         indice = int(instrucaoDividida[1])
@@ -245,33 +256,54 @@ class ProcessoGerenciador:
 
                 # 3. Comando V: Define o valor da variável inteira x
                 elif comando == 'V':
+                    nome = int(instrucaoDividida[1]) 
+                    valor = int(instrucaoDividida[2])
+                    variavel = self.memoriaPrimaria.mudarValor(self.processoSimulado.idProcesso,nome,valor)
+                    '''
                     self.processoSimulado.defineValor(
                         indice = int(instrucaoDividida[1]), 
                         valor = int(instrucaoDividida[2])
                     )
+                    '''
 
                 # 4. Comando A: Adiciona n ao valor da variável inteira x
                 elif comando == 'A':
+                    indice = int(instrucaoDividida[1]) 
+                    valor = int(instrucaoDividida[2])
+                    variavel = self.memoriaPrimaria.buscaVariavelIndice(self.processoSimulado.idProcesso,indice)
+                    self.CPU.somaValor(variavel,valor)
+                    '''
+                    self.CPU.somaValor()
                     self.processoSimulado.somaValor(
                         indice = int(instrucaoDividida[1]),
                         valor = int(instrucaoDividida[2])
                     )
+                    '''
 
                 # 5. Comando S: Subtrai n do valor da variável inteira x
                 elif comando == 'S':
+                    indice = int(instrucaoDividida[1]) 
+                    valor = int(instrucaoDividida[2])
+                    variavel = self.memoriaPrimaria.buscaVariavelIndice(self.processoSimulado.idProcesso,indice)
+                    self.CPU.somaValor(variavel,-valor)
+                    '''
                     self.processoSimulado.somaValor(
                         indice = int(instrucaoDividida[1]),
                         valor = -int(instrucaoDividida[2])
                     )
+                    '''
 
                 # 6. Comando B: Bloqueia esse processo simulado
                 elif comando == 'B':
+                    varPrimarias = self.memoriaPrimaria.removerProcesso(self.processoSimulado.idProcesso)
+                    self.memoriaSecundaria.inserirSecundariaVect(varPrimarias)
                     self.processoSimulado.estado = 0 # Bloqueado
                     self.estadoBloqueado.append(self.processoSimulado.idProcesso)
                     self.estadoPronto.remove(self.processoSimulado.idProcesso)
 
                 # 7. Comando T: Termina o processo simulado
                 elif comando == 'T':
+                    self.memoriaPrimaria.removerProcesso(self.processoSimulado.idProcesso)
                     self.estadoPronto.remove(self.processoSimulado.idProcesso)
                     self.tabelaProcesso.removerProcesso(self.processoSimulado)
                     self.processoSimulado = None
@@ -292,13 +324,13 @@ class ProcessoGerenciador:
                 self.processoSimulado.tempoCPU += 1
                 self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
 
-                if self.processoSimulado.instrucoes == []:
+                if self.memoriaPrimaria.buscarVariavelDoProcesso == []:
                     # As instruções do processo foram concluídas, remover o processo
                     self.estadoPronto.remove(self.processoSimulado.idProcesso)
                     self.tabelaProcesso.removerProcesso(self.processoSimulado)
                     self.processoSimulado = None
 
-                if self.CPU.passarQuantum() and self.processoSimulado.instrucoes != []:
+                if self.CPU.passarQuantum() and self.memoriaPrimaria.buscarVariavelDoProcesso != []:
                     # Processo gastou o quantum disponível
                     self.processoSimulado.incrementarPrioridade()
                     self.tabelaProcesso.atualizarProcesso(self.processoSimulado)

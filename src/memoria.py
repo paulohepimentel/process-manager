@@ -1,4 +1,5 @@
 from variavelProcesso import VariavelProcesso
+from copy import deepcopy
 
 class Memoria:
 
@@ -55,14 +56,64 @@ class Memoria:
                     variaveis.append(i)
         return variaveis
 
+    def buscaVariavelIndice(self, idProcesso, indice):
+        variaveis = []
+        for i in self.memoria:
+            if i != 0:
+                if i.idProcesso == idProcesso and i.nome == indice:
+                    return i
+        return False
+    
+    def preencherVariavel(self,idProcesso,nome,valor):
+        for i in self.memoria:
+            if i != 0:
+                if i.idProcesso == idProcesso and i.nome == None:
+                    i.valor = valor
+                    i.nome = nome
+                    return i
+        return False
 
-'''
-memoria = memoria(5)
+    def mudarValor(self,idProcesso,nome,valor):
+        for i in self.memoria:
+            if i != 0:
+                if i.idProcesso == idProcesso and i.nome == nome:
+                    i.valor = valor
+                    return i
+        return False
+
+    def desalocarMemoria(self,var:VariavelProcesso):
+        for i in self.memoria:
+            if i != 0:
+                if i.idProcesso == var.idProcesso and i.nome == var.nome:
+                    self.memoria[self.memoria.index(i)] = 0
+
+    def removerProcesso(self,idProcesso):
+        variaveis = []
+        for i in self.memoria:
+            if i != 0:
+                if i.idProcesso == idProcesso:
+                    variaveis.append(deepcopy(i))
+        for i in variaveis:
+            self.desalocarMemoria(i)
+
+        return variaveis
+
+    def inserirSecundaria(self,var:VariavelProcesso):
+        self.memoria.append(var)
+
+    def inserirSecundariaVect(self,var:[]):
+        for i in var:
+            self.memoria.append(i)
+"""
+
+memoria = Memoria(5)
 print(memoria.memoria)
 v1 = VariavelProcesso(1, 1, 1)
 v2 = VariavelProcesso(1, 2, 2)
 memoria.algoritmoWorstFit([v1, v2])
 
-memoria.liberaEspacoDaMemoria(1)
+#memoria.liberaEspacoDaMemoria(1)
+print(memoria.removerProcesso(1))
 print(memoria.memoria)
-'''
+
+"""
