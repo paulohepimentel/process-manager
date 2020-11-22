@@ -1,5 +1,3 @@
-
-
 class ProcessoSimulado:
 
     idProcesso = 0
@@ -42,7 +40,7 @@ class ProcessoSimulado:
         self.defineValor(indice, novoValor)
     '''
 
-    # * Métodos relacionados a manipulação dos estados dos processos    
+    # * Método relacionado a manipulação do estado do processo    
     def retornaEstado(self):
         if self.estado == 0:
             return "Bloqueado"
@@ -78,7 +76,7 @@ class ProcessoSimulado:
         dadosDoProcesso.append(self.retornaEstado())
         dadosDoProcesso.append(self.tempoInicio)
         dadosDoProcesso.append(self.tempoCPU)
-        dadosDoProcesso.append(self.variaveis)
+        # dadosDoProcesso.append(self.variaveis)
         return dadosDoProcesso
 
     def imprimeProcessoSimplificado(self):
