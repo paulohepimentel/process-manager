@@ -1,4 +1,3 @@
-from tabelaProcessos import TabelaProcessos
 from prettytable import PrettyTable
 class ProcessoImpressao:
 
@@ -10,7 +9,7 @@ class ProcessoImpressao:
             print("\t\tOs processos foram concluídos. A tabela de processos está vazia!")
             return None
         print('📑 Tabela de Processos - Modo Detalhado')
-        tabela = PrettyTable(['idProcesso', 'idProcessoPai', 'Prioridade', 'Estado', 'Tempo Inicial', 'TempoCPU', 'Valores'])
+        tabela = PrettyTable(['idProcesso', 'idProcessoPai', 'Prioridade', 'Estado', 'Tempo Inicial', 'TempoCPU'])
         for processo in tabelaProcessos.retornaLista():
             dadosDoProcesso = processo.imprimeProcessoDetalhado()
             tabela.add_row(dadosDoProcesso)
