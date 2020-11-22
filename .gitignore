@@ -1,2 +1,1 @@
-# Ignorar Pasta .idea
-/.idea
+/src/__pycache__
