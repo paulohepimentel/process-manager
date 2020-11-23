@@ -36,7 +36,10 @@ class Memoria:
                     maiorEspaco = tamanho
                     index = self.memoria.index(i) - tamanho
                 tamanho = 0
-
+        if (tamanho > maiorEspaco):
+            ('Maior fatia: ' + str(tamanho))
+            maiorEspaco = tamanho
+            index = self.memoria.index(i) - tamanho
         # Maior espaço recebe o tamanho total da memória
         if maiorEspaco == -1:
             maiorEspaco = len(self.memoria)
