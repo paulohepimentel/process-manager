@@ -1,12 +1,11 @@
 import os
-#from copy import deepcopy
+from copy import deepcopy
 from cpu import CPU
+from memoria import Memoria
 from processoImpressao import ProcessoImpressao
 from processoSimulado import ProcessoSimulado
 from tabelaProcessos import TabelaProcessos
 from variavelProcesso import VariavelProcesso
-from memoria import Memoria
-from copy import deepcopy
 
 class ProcessoGerenciador:
 
@@ -20,7 +19,7 @@ class ProcessoGerenciador:
         self.estadoPronto = []
         self.estadoBloqueado = []
         self.tabelaProcesso = TabelaProcessos()
-        
+
         self.memoriaPrimaria = Memoria(10)
         self.memoriaSecundaria = Memoria(0)
 
@@ -28,6 +27,8 @@ class ProcessoGerenciador:
         print('Como você gostaria que os processos fossem escalonados?')
         print('➡️  H - Escalonar por prioridade mais alta')
         print('➡️  X - Escalonar por número de instruções')
+        self.modoDeEscalonamento = 'H'
+        '''
         while(True):
             self.modoDeEscalonamento = input('📌  Escolha uma opção: ').upper()
             if self.modoDeEscalonamento == 'H' or self.modoDeEscalonamento == 'X':
@@ -35,11 +36,14 @@ class ProcessoGerenciador:
             else:
                 print('❌ Erro! Entrada inválida\n')
         print('\n')
+        '''
 
         # Definição da opção de impressão
         print('Como você gostaria de imprimir o estado do sistema?')
         print('➡️  D - Impressão detalhada')
         print('➡️  S - Impressão simplificada')
+        self.modoDeImpressao = 'D'
+        '''
         while(True):
             self.modoDeImpressao = input('📌  Escolha uma opção: ').upper()
             if self.modoDeImpressao == 'D' or self.modoDeImpressao == 'S':
@@ -47,6 +51,7 @@ class ProcessoGerenciador:
             else:
                 print('❌ Erro! Entrada inválida\n')
         print('\n')
+        '''
 
         self.criarProcessoSimulado(
             eProcessoInicial = True
@@ -141,7 +146,7 @@ class ProcessoGerenciador:
                 prioridade = self.processoSimulado.prioridade
             )
             variaveisPai = deepcopy(self.memoriaPrimaria.buscarVariavelDoProcesso(processoSimulado.idProcessoPai))
-            
+
             for i in variaveisPai:
                 i.idProcesso = processoSimulado.idProcesso
 
@@ -222,6 +227,8 @@ class ProcessoGerenciador:
                 instrucao = self.processoSimulado.instrucoes.pop(0)
                 instrucaoDividida = instrucao.split()
                 comando = instrucaoDividida[0]
+
+                print('\n\nExecutando a instrução: ' + comando)
 
                 # ​1. Comando N: número de variáveis que serão declaradas neste processo simulado
                 if comando == 'N':
@@ -318,6 +325,12 @@ class ProcessoGerenciador:
                 # 9.​ Comando R: Substitui o programa do processo pelo programa no arquivo
                 elif comando == 'R':
                     self.substituirImagemProcessoAtual(str(instrucaoDividida[1]), self.processoSimulado)
+
+            print('\n\nMemória Primária')
+            self.memoriaPrimaria.imprimeMemoria()
+
+            print(' Memória Secundária')
+            self.memoriaSecundaria.imprimeMemoria()
 
             self.tempoCPU += 1
             if comando != 'T':

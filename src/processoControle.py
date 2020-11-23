@@ -21,6 +21,7 @@ class ProcessoControle:
         print()
         '''
 
+
     # * Método responsável pela criação processo controle e realizar o fork para
     # * a criação do processo gerenciador
     def criaProcessoControleEGerenciador(self):
@@ -35,12 +36,15 @@ class ProcessoControle:
             print('➡️  A - Entrada manual')
             print('➡️  B - Arquivo de entrada')
 
+            '''
             while (True):
                 opcaoEntrada = input("📌 Escolha uma opção: ").upper()
                 if opcaoEntrada == 'A' or opcaoEntrada == 'B':
                     break
                 else:
                     print('❌ Erro! Opção inválida, tente novamente')
+            '''
+            opcaoEntrada = 'B'
 
             comandos = ''
             if(opcaoEntrada == 'A'):
@@ -75,7 +79,8 @@ class ProcessoControle:
         comandos = ''
 
         print('\n🤖 Modo entrada manual ativado')
-        nomeDoArquivo = input("📄  Entre com o nome arquivo: ")
+        # nomeDoArquivo = input("📄  Entre com o nome arquivo: ")
+        nomeDoArquivo = 'cm.txt'
 
         arquivo = open(nomeDoArquivo, 'r') # Lietura do arquivo externo
         for comando in arquivo:
