@@ -24,6 +24,7 @@ class ProcessoGerenciador:
 
         self.memoriaPrimaria = Memoria(10)
         self.memoriaSecundaria = Memoria(0)
+        self.memoriaVirtual = Memoria(0)
 
         #Fragmentação externa é quando um espaço de memória que possui espaço para alocar um processo é 
         # ignorado, e um outro é utilizado deixando um espaço vago entre os processos na memoria
@@ -117,11 +118,17 @@ class ProcessoGerenciador:
                     processoImpressao.impressaoDetalhada(self.tabelaProcesso)
                 elif(self.modoDeImpressao == 'S'):
                     processoImpressao.impressaoSimplificada(self.tabelaProcesso)
-                print("Memória primária:\n")
+                
+                print('\n📑 Memória Primária\n')
                 self.memoriaPrimaria.imprimeMemoria()
-                print("Memória secundária:\n")
+
+                print("\n📑 Memória Secundária:\n")
                 self.memoriaSecundaria.imprimeMemoria()
-                print("Parâmetros de desempenho:\n")
+
+                print("\n📑 Memória Virtual:\n")
+                self.memoriaVirtual.imprimeMemoria()
+                
+                print("\n📑 Parâmetros de Desempenho:\n")
                 self.imprimeResultadosMemoria()
 
                 print('\n\t\t\t🟢🟢🟢 Finalizando o Processo Impressão! 🟢🟢🟢\n')
@@ -391,9 +398,9 @@ class ProcessoGerenciador:
                     self.escalonadorDeProcessos()
     
     def imprimeResultadosMemoria(self):
-        print("Percentual de vezes que uma requisição é negada: %.2f" % float(100*(self.alocNegadas/self.alocFeitas)))
-        print("Tmpo médio de alocação: "+str(self.tempoAlocNos/self.numAlocNos))
-        print("Numero de fragmentos externos na memoria primaria: "+str(self.memoriaPrimaria.numFrag))
+        print("📝 Percentual de vezes que uma Requisição é Negada: %.2f" % float(100*(self.alocNegadas/self.alocFeitas)))
+        print("📝 Tempo Médio de Alocação: "+str(self.tempoAlocNos/self.numAlocNos))
+        print("📝 Numero de Fragmentos Externos na Memoria Primaria: "+str(self.memoriaPrimaria.numFrag))
 
     def passarSecundariaParaPrimaria(self):
         if len(self.memoriaSecundaria) != 0:
