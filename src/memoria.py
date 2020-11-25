@@ -9,12 +9,36 @@ class Memoria:
         self.memoria = [FREE for i in range(tamanho)]
 
     def imprimeMemoria(self):
+        contador = 0
+        print('|', end='')
+        for i in self.memoria:
+            if contador >= self.tamanho:
+                break
+            if i == FREE:
+                print(' '+ str(i) + ' |', end='')
+            else:
+                print(' '+ str(i.idProcesso) + '-' + str(i.nome) + '-' + str(i.valor) + ' |', end='')
+            contador+=1
+        print('\n')
+    
+    def imprimeTodaMemoria(self):
         print('|', end='')
         for i in self.memoria:
             if i == FREE:
                 print(' '+ str(i) + ' |', end='')
             else:
                 print(' '+ str(i.idProcesso) + '-' + str(i.nome) + '-' + str(i.valor) + ' |', end='')
+        print('\n')
+
+    def imprimeMemoriaVirtual(self):
+        contador = 0
+        print('|', end='')
+        for i in self.memoria:
+            if i == FREE and contador>=self.tamanho:
+                print(' '+ str(i) + ' |', end='')
+            elif(contador>=self.tamanho):
+                print(' '+ str(i.idProcesso) + '-' + str(i.nome) + '-' + str(i.valor) + ' |', end='')
+            contador+=1
         print('\n')
 
     def retornaTamanhoMemoria(self):
@@ -147,20 +171,21 @@ class Memoria:
                 return i.idProcesso
 
 
-
 '''
 memoria = Memoria(5)
 print(memoria.memoria)
 v1 = VariavelProcesso(1, 1, 1)
 v2 = VariavelProcesso(2, 2, 2)
 memoria.algoritmoWorstFit([v1,v2,v1])
-memoria.removerProcesso(2)
-#memoria.algoritmoWorstFit([v1])
-#memoria.algoritmoWorstFit([v1])
+memoria.algoritmoWorstFit([v1])
+memoria.algoritmoWorstFit([v1])
 memoria.algoritmoWorstFit([v1,v2,v1,v2])
-
+memoria.inserirSecundaria(v2)
+print(memoria.removerProcesso(2))
 
 #memoria.liberaEspacoDaMemoria(1)
 #print()
 memoria.imprimeMemoria()
+memoria.imprimeMemoriaVirtual()
+memoria.imprimeTodaMemoria()
 '''
