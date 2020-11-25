@@ -3,8 +3,8 @@ from copy import deepcopy
 
 FREE = 0
 class Memoria:
-
     def __init__(self, tamanho):
+        self.numFrag = 0
         self.tamanho = tamanho
         self.memoria = [FREE for i in range(tamanho)]
 
@@ -19,7 +19,6 @@ class Memoria:
 
     def retornaTamanhoMemoria(self):
         return len(self.memoria)
-
     # Método só confere se existe a possibilidade de inserção
     def retornaEspacoLivreDaMemoria(self):
         tamanho = 0
@@ -39,13 +38,31 @@ class Memoria:
         if (tamanho > maiorEspaco):
             ('Maior fatia: ' + str(tamanho))
             maiorEspaco = tamanho
-            index = self.memoria.index(i) - tamanho
+            index = len(self.memoria) - tamanho
         # Maior espaço recebe o tamanho total da memória
-        if maiorEspaco == -1:
-            maiorEspaco = len(self.memoria)
+    
 
         print('Espaço: ' + str(maiorEspaco))
         return maiorEspaco, index
+
+    def verificarFragExterna(self,tamanho : int,indiceFinal: int):
+        numFrag = 0
+        contador = 0
+        tamIdentico = 0
+        for i in self.memoria:
+            if contador >= indiceFinal:
+                return numFrag
+            if i == FREE:
+                tamIdentico+=1
+                if tamIdentico == tamanho:
+                    tamIdentico = 0
+                    numFrag+=1
+            else:
+                tamIdentico = 0
+            contador+=1
+        self.numFrag+=numFrag
+        return numFrag
+
 
     def liberaEspacoDaMemoria(self, idProcesso):
         for index, i in enumerate(self.memoria):
@@ -57,9 +74,11 @@ class Memoria:
     # Método que escolhe a maior porção de memória livre
     def algoritmoWorstFit(self, variavelProcesso):
         memoriaLivre, index = self.retornaEspacoLivreDaMemoria()
+        print("Indice: "+str(index))
         print('Espaço livre: ' + str(memoriaLivre))
         if memoriaLivre >= len(variavelProcesso):
             print('Cabe')
+
             for i in variavelProcesso:
                 self.memoria[index] = i
                 index +=1
@@ -122,14 +141,26 @@ class Memoria:
         for i in var:
             self.memoria.append(i)
 
-"""
+    def primeiroProcessoSec(self):
+        for i in self.memoria:
+            if i != FREE:
+                return i.idProcesso
+
+
+
+'''
 memoria = Memoria(5)
 print(memoria.memoria)
 v1 = VariavelProcesso(1, 1, 1)
-v2 = VariavelProcesso(1, 2, 2)
-memoria.algoritmoWorstFit([v1, v2])
+v2 = VariavelProcesso(2, 2, 2)
+memoria.algoritmoWorstFit([v1,v2,v1])
+memoria.removerProcesso(2)
+#memoria.algoritmoWorstFit([v1])
+#memoria.algoritmoWorstFit([v1])
+memoria.algoritmoWorstFit([v1,v2,v1,v2])
+
 
 #memoria.liberaEspacoDaMemoria(1)
-print(memoria.removerProcesso(1))
-print(memoria.memoria)
-"""
+#print()
+memoria.imprimeMemoria()
+'''

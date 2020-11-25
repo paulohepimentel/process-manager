@@ -6,6 +6,8 @@ from processoImpressao import ProcessoImpressao
 from processoSimulado import ProcessoSimulado
 from tabelaProcessos import TabelaProcessos
 from variavelProcesso import VariavelProcesso
+import time
+
 
 class ProcessoGerenciador:
 
@@ -22,6 +24,16 @@ class ProcessoGerenciador:
 
         self.memoriaPrimaria = Memoria(10)
         self.memoriaSecundaria = Memoria(0)
+
+        #Fragmentação externa é quando um espaço de memória que possui espaço para alocar um processo é 
+        # ignorado, e um outro é utilizado deixando um espaço vago entre os processos na memoria
+        #    [x,x,w,0,z,z,a,a]
+
+
+        self.tempoAlocNos = 0
+        self.numAlocNos = 0
+        self.alocFeitas = 0
+        self.alocNegadas = 0
 
         # Definição da opção de escalonamento
         print('Como você gostaria que os processos fossem escalonados?')
@@ -105,6 +117,13 @@ class ProcessoGerenciador:
                     processoImpressao.impressaoDetalhada(self.tabelaProcesso)
                 elif(self.modoDeImpressao == 'S'):
                     processoImpressao.impressaoSimplificada(self.tabelaProcesso)
+                print("Memória primária:\n")
+                self.memoriaPrimaria.imprimeMemoria()
+                print("Memória secundária:\n")
+                self.memoriaSecundaria.imprimeMemoria()
+                print("Parâmetros de desempenho:\n")
+                self.imprimeResultadosMemoria()
+
                 print('\n\t\t\t🟢🟢🟢 Finalizando o Processo Impressão! 🟢🟢🟢\n')
                 exit()
 
@@ -148,11 +167,19 @@ class ProcessoGerenciador:
             variaveisPai = deepcopy(self.memoriaPrimaria.buscarVariavelDoProcesso(processoSimulado.idProcessoPai))
 
             for i in variaveisPai:
+                self.alocFeitas+=1
                 i.idProcesso = processoSimulado.idProcesso
+            
+            inicio = time.time()
+            resultadoInsercao = self.memoriaPrimaria.algoritmoWorstFit(variaveisPai)
+            fim = time.time()
+            self.tempoAlocNos+= (fim - inicio)
+            self.numAlocNos+=1
 
-            if not self.memoriaPrimaria.algoritmoWorstFit(variaveisPai):
+            if not resultadoInsercao:
+                self.alocNegadas+= len(variaveisPai)
                 self.memoriaSecundaria.inserirSecundariaVect(variaveisPai)
-
+           
             #processoSimulado.variaveis = self.processoSimulado.variaveis.copy()
             processoSimulado.instrucoes = self.processoSimulado.instrucoes.copy()
             self.tabelaProcesso.adicionarProcesso(processoSimulado)
@@ -189,6 +216,7 @@ class ProcessoGerenciador:
         if len(self.estadoPronto) > 0:
             self.estadoBloqueado.insert(self.estadoPronto.pop(0))
             processoSimulado.estado = 0
+    
 
     # * Função 4: Escalonar os processos
     def escalonadorDeProcessos(self):
@@ -233,19 +261,27 @@ class ProcessoGerenciador:
                 # ​1. Comando N: número de variáveis que serão declaradas neste processo simulado
                 if comando == 'N':
                     numDeVariveis = int(instrucaoDividida[1])
+                    self.alocFeitas+= numDeVariveis
                     variaveisDoProcesso = []
                     for i in range(numDeVariveis):
                         variavel = VariavelProcesso(self.processoSimulado.idProcesso)
                         variaveisDoProcesso.append(variavel)
-
+                    inicio = time.time()
                     memoriaTemEspaco = self.memoriaPrimaria.algoritmoWorstFit(variaveisDoProcesso)
+                    fim = time.time()
+                    self.tempoAlocNos+= (fim - inicio)
+                    self.numAlocNos+=1
                     if(not memoriaTemEspaco):
+                        self.alocNegadas+=numDeVariveis
+                        self.memoriaSecundaria.inserirSecundariaVect(variaveisDoProcesso)
+                        self.processoSimulado.estado = 0 # Bloqueado
+                        self.estadoBloqueado.append(self.processoSimulado.idProcesso)
+                        self.estadoPronto.remove(self.processoSimulado.idProcesso)
                         '''
-                            Processo é bloqueado e entra para a memória secundária com a flag de 
+                            Processo é bloqueado e entra pnumDeVariveisara a memória secundária com a flag de 
                             requisição de espaço (flag pode ser abstraída, já que se o processo foi 
                             bloqueado ele está aguardando a memória primária).
                         '''
-                        pass
 
                 # 2. Comando D: Declara uma variável inteira X, valor inicial igual a 0
                 elif comando == 'D':
@@ -342,6 +378,7 @@ class ProcessoGerenciador:
                     self.estadoPronto.remove(self.processoSimulado.idProcesso)
                     self.tabelaProcesso.removerProcesso(self.processoSimulado)
                     self.processoSimulado = None
+                    self.passarSecundariaParaPrimaria()
 
                 if self.CPU.passarQuantum() and self.memoriaPrimaria.buscarVariavelDoProcesso != []:
                     # Processo gastou o quantum disponível
@@ -352,3 +389,22 @@ class ProcessoGerenciador:
                 if comando == 'B':
                     self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
                     self.escalonadorDeProcessos()
+    
+    def imprimeResultadosMemoria(self):
+        print("Percentual de vezes que uma requisição é negada: %.2f" % float(100*(self.alocNegadas/self.alocFeitas)))
+        print("Tmpo médio de alocação: "+str(self.tempoAlocNos/self.numAlocNos))
+        print("Numero de fragmentos externos na memoria primaria: "+str(self.memoriaPrimaria.numFrag))
+
+    def passarSecundariaParaPrimaria(self):
+        if len(self.memoriaSecundaria) != 0:
+            variaveis = self.memoriaSecundaria.removerProcesso(self.memoriaSecundaria.primeiroProcessoSec())
+            inicio = time.time()
+            resultadoInsercao = self.memoriaPrimaria.algoritmoWorstFit(variaveis)
+            fim = time.time()
+            self.tempoAlocNos+= (fim - inicio)
+            self.numAlocNos+=1
+
+            if not resultadoInsercao:
+                self.alocNegadas+= len(variaveis)
+                self.memoriaSecundaria.inserirSecundariaVect(variaveis)
+           
