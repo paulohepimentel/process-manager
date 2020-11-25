@@ -126,11 +126,7 @@ class ProcessoGerenciador:
                 self.memoriaSecundaria.imprimeMemoria()
 
                 print("\n📑 Memória Virtual:\n")
-<<<<<<< HEAD
                 self.memoriaPrimaria.imprimeMemoriaVirtual()
-=======
-                self.memoriaVirtual.imprimeMemoria()
->>>>>>> 1fd86f98411f2aca63da3404f037c00d5fc6065c
                 
                 print("\n📑 Parâmetros de Desempenho:\n")
                 self.imprimeResultadosMemoria()
