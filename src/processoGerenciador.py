@@ -22,14 +22,9 @@ class ProcessoGerenciador:
         self.estadoBloqueado = []
         self.tabelaProcesso = TabelaProcessos()
 
-        self.memoriaPrimaria = Memoria(10)
+        self.memoriaPrimaria = Memoria(5)
         self.memoriaSecundaria = Memoria(0)
         self.memoriaVirtual = Memoria(0)
-
-        #Fragmentação externa é quando um espaço de memória que possui espaço para alocar um processo é 
-        # ignorado, e um outro é utilizado deixando um espaço vago entre os processos na memoria
-        #    [x,x,w,0,z,z,a,a]
-
 
         self.tempoAlocNos = 0
         self.numAlocNos = 0
@@ -37,9 +32,11 @@ class ProcessoGerenciador:
         self.alocNegadas = 0
 
         # Definição da opção de escalonamento
+        '''
         print('Como você gostaria que os processos fossem escalonados?')
         print('➡️  H - Escalonar por prioridade mais alta')
         print('➡️  X - Escalonar por número de instruções')
+        '''
         self.modoDeEscalonamento = 'H'
         '''
         while(True):
@@ -52,9 +49,11 @@ class ProcessoGerenciador:
         '''
 
         # Definição da opção de impressão
+        '''
         print('Como você gostaria de imprimir o estado do sistema?')
         print('➡️  D - Impressão detalhada')
         print('➡️  S - Impressão simplificada')
+        '''
         self.modoDeImpressao = 'D'
         '''
         while(True):
@@ -69,7 +68,9 @@ class ProcessoGerenciador:
         self.criarProcessoSimulado(
             eProcessoInicial = True
         )
+        '''
         print('🔵Gerenciador🔵 criou um 🟡Simulado🟡')
+        '''
 
 
     # * Método relacionado aos comandos recebidos do processo controle através do pipe
@@ -78,17 +79,23 @@ class ProcessoGerenciador:
         if(comandoRecebido == 'U'):
             self.executarProcessoSimulado()
             self.tempo+=1
+            '''
             print('\n⏰ O tempo foi incrementado. Tempo Atual: ' + str(self.tempo))
+            '''
             print('\n'+('-'*90)+'\n')
 
         # Comando L: Desbloqueia o primeiro processo simulado na fila bloqueada.
         elif(comandoRecebido == 'L'): 
             self.processoBloqueadoParaPronto()
+            '''
             print('🔵Gerenciador🔵 desbloqueou o primeiro processo da fila de bloqueados\n')
+            '''
 
         # Comando I: Imprime o estado atual do sistema.
         elif(comandoRecebido == 'I'):
+            '''
             print('🔵Gerenciador🔵 irá criar o 🟢Impressão🟢\n')
+            '''
 
             # Pipe -> r para leitura e w para escrita
             rpipe, wpipe = os.pipe()
@@ -104,14 +111,6 @@ class ProcessoGerenciador:
                 self.modoDeImpressao = os.read(rpipe, 32)
                 self.modoDeImpressao = self.modoDeImpressao.decode()
 
-                '''
-                    - número médio de fragmentos externos;
-                    - tempo médio de alocação em termos de número médio de nós percorridos na alocação;
-                    - o percentual de vezes que uma requisição de alocação é negada. Neste caso o processo
-                    ficaria bloqueado com uma flag de espera por memória. Quando houvesse a liberação de
-                    memória por um processo, a alocação deste processo poderia ser tentada novamente.
-                '''
-
                 processoImpressao = ProcessoImpressao()
 
                 if(self.modoDeImpressao == 'D'):
@@ -123,15 +122,15 @@ class ProcessoGerenciador:
                 self.memoriaPrimaria.imprimeMemoria()
 
                 print("\n📑 Memória Secundária:\n")
-                self.memoriaSecundaria.imprimeMemoria()
+                self.memoriaSecundaria.imprimeTodaMemoria()
 
                 print("\n📑 Memória Virtual:\n")
                 self.memoriaPrimaria.imprimeMemoriaVirtual()
-                
+                '''
                 print("\n📑 Parâmetros de Desempenho:\n")
                 self.imprimeResultadosMemoria()
-
                 print('\n\t\t\t🟢🟢🟢 Finalizando o Processo Impressão! 🟢🟢🟢\n')
+                '''
                 exit()
 
         # Comando M: Imprime o tempo médio do ciclo e finaliza o sistema.
@@ -161,7 +160,6 @@ class ProcessoGerenciador:
             arquivo.close()
             self.tabelaProcesso.adicionarProcesso(self.processoSimulado)
             self.inserirNaListaDeProntos(self.processoSimulado)
-
         else:
             processoSimulado = ProcessoSimulado(
                 idProcesso = self.idProcesso, 
@@ -171,12 +169,12 @@ class ProcessoGerenciador:
                 estado = 1, # Pronto
                 prioridade = self.processoSimulado.prioridade
             )
-            variaveisPai = deepcopy(self.memoriaPrimaria.buscarVariavelDoProcesso(processoSimulado.idProcessoPai))
+            variaveisPai = deepcopy(self.memoriaPrimaria.buscarVariavelDoProcesso(self.processoSimulado.idProcesso))
 
             for i in variaveisPai:
                 self.alocFeitas+=1
                 i.idProcesso = processoSimulado.idProcesso
-            
+
             inicio = time.time()
             resultadoInsercao = self.memoriaPrimaria.algoritmoWorstFit(variaveisPai)
             fim = time.time()
@@ -186,7 +184,7 @@ class ProcessoGerenciador:
             if not resultadoInsercao:
                 #self.alocNegadas+= len(variaveisPai)
                 self.memoriaPrimaria.inserirSecundariaVect(variaveisPai)
-           
+
             #processoSimulado.variaveis = self.processoSimulado.variaveis.copy()
             processoSimulado.instrucoes = self.processoSimulado.instrucoes.copy()
             self.tabelaProcesso.adicionarProcesso(processoSimulado)
@@ -194,15 +192,20 @@ class ProcessoGerenciador:
 
         self.idProcesso += 1
 
+
     # * Função 2: Substituir a imagem atual de um processo simualdo por uma nova imagem
     def substituirImagemProcessoAtual(self, arquivo, processoSimulado):
         processoSimulado.contadorPrograma = 0
         processoSimulado.instrucoes = []
         #processoSimulado.variaveis = {}
-        
+
+        #self.memoriaPrimaria.removerProcesso(processoSimulado.idProcesso)
+        #self.memoriaSecundaria.removerProcesso(processoSimulado.idProcesso)
+
         with open(arquivo) as file:
             for line in file:
                 processoSimulado.adicionarInstrucao(line.replace("\n",""))
+
 
     # * Função 3: Gerenciar a transição de estados do processo
     def inserirNaListaDeProntos(self, processoSimulado):
@@ -223,7 +226,7 @@ class ProcessoGerenciador:
         if len(self.estadoPronto) > 0:
             self.estadoBloqueado.insert(self.estadoPronto.pop(0))
             processoSimulado.estado = 0
-    
+
 
     # * Função 4: Escalonar os processos
     def escalonadorDeProcessos(self):
@@ -235,20 +238,27 @@ class ProcessoGerenciador:
         if self.estadoPronto == []:
             self.processoSimulado = None
         else:
-            print('✴️  Proximo processo: %d' % self.estadoPronto[0])
+            print('\n✴️  Proximo processo: %d' % self.estadoPronto[0])
             self.processoSimulado = self.tabelaProcesso.buscarProcesso(self.estadoPronto[0])
             self.CPU.quantumUsado = 0
+            print('1'*50)
+            print('Novo processo')
+            print(self.processoSimulado.idProcesso)
             self.trocaDeContexto(self.processoSimulado)
+
+
 
     # * Função 5: Realizar a troca de contexto
     def trocaDeContexto(self, processoSimulado):
         self.tabelaProcesso.defineProcessoEmExecucao(processoSimulado)
 
+
     # * Método relacionado a execução do processo simulado
     def executarProcessoSimulado(self):
         if self.processoSimulado == None and len(self.estadoPronto) > 0:
             self.escalonadorDeProcessos()
-        
+            print('9'*50)
+
         if self.processoSimulado != None:
             self.CPU.executarProcesso(self.processoSimulado)
             self.processoSimulado = self.CPU.processoEmExecucao
@@ -262,8 +272,6 @@ class ProcessoGerenciador:
                 instrucao = self.processoSimulado.instrucoes.pop(0)
                 instrucaoDividida = instrucao.split()
                 comando = instrucaoDividida[0]
-
-                print('\n\nExecutando a instrução: ' + comando)
 
                 # ​1. Comando N: número de variáveis que serão declaradas neste processo simulado
                 if comando == 'N':
@@ -285,11 +293,6 @@ class ProcessoGerenciador:
                         #self.processoSimulado.estado = 0 # Bloqueado
                         #self.estadoBloqueado.append(self.processoSimulado.idProcesso)
                         #self.estadoPronto.remove(self.processoSimulado.idProcesso)
-                        '''
-                            Processo é bloqueado e entra pnumDeVariveisara a memória secundária com a flag de 
-                            requisição de espaço (flag pode ser abstraída, já que se o processo foi 
-                            bloqueado ele está aguardando a memória primária).
-                        '''
 
                 # 2. Comando D: Declara uma variável inteira X, valor inicial igual a 0
                 elif comando == 'D':
@@ -303,7 +306,6 @@ class ProcessoGerenciador:
                         if v.nome == None:
                             v.nome =
                     '''
-
 
                 # 3. Comando V: Define o valor da variável inteira x
                 elif comando == 'V':
@@ -370,12 +372,6 @@ class ProcessoGerenciador:
                 elif comando == 'R':
                     self.substituirImagemProcessoAtual(str(instrucaoDividida[1]), self.processoSimulado)
 
-            print('\n\nMemória Primária')
-            self.memoriaPrimaria.imprimeMemoria()
-
-            print(' Memória Secundária')
-            self.memoriaSecundaria.imprimeMemoria()
-
             self.tempoCPU += 1
             if comando != 'T':
                 self.processoSimulado.tempoCPU += 1
@@ -388,7 +384,14 @@ class ProcessoGerenciador:
                     self.processoSimulado = None
                     self.passarSecundariaParaPrimaria()
 
+                print('\n')
+                print('-'*100)
+                print('Instrução atual: '+ comando)
+                print('📑 Instruções do processo atual: ', end='')
+                for i in self.processoSimulado.instrucoes:
+                    print (i, end='; ')
                 if self.CPU.passarQuantum() and self.memoriaPrimaria.buscarVariavelDoProcesso != []:
+
                     # Processo gastou o quantum disponível
                     self.processoSimulado.incrementarPrioridade()
                     self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
@@ -397,12 +400,24 @@ class ProcessoGerenciador:
                 if comando == 'B':
                     self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
                     self.escalonadorDeProcessos()
-    
+
+
+    # * Método que imprime o estado da memória
     def imprimeResultadosMemoria(self):
+        # O percentual de vezes que uma requisição de alocação é negada. Neste caso o processo
         print("📝 Percentual de vezes que uma Requisição é Negada: %.2f" % float(100*(self.alocNegadas/self.alocFeitas)))
+        
+        # Tempo médio de alocação em termos de número médio de nós percorridos na alocação;
         print("📝 Tempo Médio de Alocação: "+str(self.tempoAlocNos/self.numAlocNos))
+        
+        # Número médio de fragmentos externos. Fragmentação externa é quando um 
+        # espaço de memória que possui espaço para alocar um processo é ignorado, 
+        # e um outro é utilizado deixando um espaço vago entre os processos na 
+        # memoria. Exemplo: [x,x,w,0,z,z,a,a]
         print("📝 Numero de Fragmentos Externos na Memoria Primaria: "+str(self.memoriaPrimaria.numFrag))
 
+
+    # * Método que passa da memória secundária para a memória primária
     def passarSecundariaParaPrimaria(self):
         if len(self.memoriaSecundaria) != 0:
             variaveis = self.memoriaSecundaria.removerProcesso(self.memoriaSecundaria.primeiroProcessoSec())
@@ -415,4 +430,5 @@ class ProcessoGerenciador:
             if not resultadoInsercao:
                 self.alocNegadas+= len(variaveis)
                 self.memoriaSecundaria.inserirSecundariaVect(variaveis)
-           
+
+

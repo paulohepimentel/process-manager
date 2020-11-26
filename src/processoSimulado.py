@@ -21,7 +21,6 @@ class ProcessoSimulado:
         self.instrucoes = []
         # self.variaveis = {}
 
-
     # * Os tipos de instruções que um processo simulado pode executar dentro da CPU
     '''
     # 2. Comando D: Declara uma variável inteira X, valor inicial igual a 0
@@ -58,14 +57,12 @@ class ProcessoSimulado:
         if self.prioridade > 0:
             self.prioridade-=1
 
-
 # * Métodos relacionados a execução do processo
     def adicionarInstrucao(self, instrucao:str):
         self.instrucoes.append(instrucao)
 
     def executarProcesso(self):
         self.tempoCPU += 1
-
 
 # * Métodos relacionados a impressão do processo
     def imprimeProcessoDetalhado(self):

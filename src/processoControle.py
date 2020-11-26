@@ -5,7 +5,9 @@ from prettytable import PrettyTable
 class ProcessoControle:
 
     def __init__(self):
+        '''
         print('\n\t\t\t🔴🔴🔴 Iniciando o Processo Controle! 🔴🔴🔴\n')
+        '''
         self.numComandos = 0
         self.criaProcessoControleEGerenciador()
 
@@ -32,11 +34,11 @@ class ProcessoControle:
         # Processo pai: Processo Controle
         if idProcesso > 0:
             self.menu()
+            '''
             print('Como você gostaria de inserir os comandos?')
             print('➡️  A - Entrada manual')
             print('➡️  B - Arquivo de entrada')
 
-            '''
             while (True):
                 opcaoEntrada = input("📌 Escolha uma opção: ").upper()
                 if opcaoEntrada == 'A' or opcaoEntrada == 'B':
@@ -69,7 +71,9 @@ class ProcessoControle:
             i = 0
             for comando in comandosRecebidos:
                 i+=1
+                '''
                 print('🔵Gerenciador🔵 irá executar agora o comando nº ' + str(i) +': ' + comando)
+                '''
                 processoGerenciador.recebeComandoDoControle(comando)
 
 
@@ -90,8 +94,10 @@ class ProcessoControle:
             else:
                 comandos += comando
         arquivo.close()
+        '''
         print('🔰 Lista de comandos recebidos: ', end='')
         print(*comandos, sep =", ")
+        '''
         return comandos
 
     def recebeComandoManual(self):

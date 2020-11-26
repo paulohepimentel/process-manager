@@ -1,6 +1,6 @@
 N 2
 D 0
 D 1
-F 1
 V 0 1000
+F 1
 R processo1.txt
