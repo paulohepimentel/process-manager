@@ -199,8 +199,8 @@ class ProcessoGerenciador:
         processoSimulado.instrucoes = []
         #processoSimulado.variaveis = {}
 
-        #self.memoriaPrimaria.removerProcesso(processoSimulado.idProcesso)
-        #self.memoriaSecundaria.removerProcesso(processoSimulado.idProcesso)
+        self.memoriaPrimaria.removerProcesso(processoSimulado.idProcesso)
+        self.memoriaSecundaria.removerProcesso(processoSimulado.idProcesso)
 
         with open(arquivo) as file:
             for line in file:
@@ -258,7 +258,8 @@ class ProcessoGerenciador:
         if self.processoSimulado == None and len(self.estadoPronto) > 0:
             self.escalonadorDeProcessos()
             print('9'*50)
-
+        print("ID do Processo:"+str(self.processoSimulado.idProcesso))
+        print("Instruções do processo:" + str(self.processoSimulado.instrucoes))
         if self.processoSimulado != None:
             self.CPU.executarProcesso(self.processoSimulado)
             self.processoSimulado = self.CPU.processoEmExecucao
@@ -373,15 +374,17 @@ class ProcessoGerenciador:
                     self.substituirImagemProcessoAtual(str(instrucaoDividida[1]), self.processoSimulado)
 
             self.tempoCPU += 1
+            print("COMANDO!" + comando)
             if comando != 'T':
                 self.processoSimulado.tempoCPU += 1
                 self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
 
-                if self.memoriaPrimaria.buscarVariavelDoProcesso == []:
+                if self.processoSimulado.instrucoes == []:
                     # As instruções do processo foram concluídas, remover o processo
                     self.estadoPronto.remove(self.processoSimulado.idProcesso)
                     self.tabelaProcesso.removerProcesso(self.processoSimulado)
                     self.processoSimulado = None
+                    self.memoriaPrimaria.removerProcesso(self.processoSimulado.idProcesso)
                     self.passarSecundariaParaPrimaria()
 
                 print('\n')
@@ -390,8 +393,7 @@ class ProcessoGerenciador:
                 print('📑 Instruções do processo atual: ', end='')
                 for i in self.processoSimulado.instrucoes:
                     print (i, end='; ')
-                if self.CPU.passarQuantum() and self.memoriaPrimaria.buscarVariavelDoProcesso != []:
-
+                if self.CPU.passarQuantum() and self.processoSimulado.instrucoes != []:
                     # Processo gastou o quantum disponível
                     self.processoSimulado.incrementarPrioridade()
                     self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
