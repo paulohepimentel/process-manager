@@ -79,23 +79,17 @@ class ProcessoGerenciador:
         if(comandoRecebido == 'U'):
             self.executarProcessoSimulado()
             self.tempo+=1
-            '''
             print('\n⏰ O tempo foi incrementado. Tempo Atual: ' + str(self.tempo))
-            '''
             print('\n'+('-'*90)+'\n')
 
         # Comando L: Desbloqueia o primeiro processo simulado na fila bloqueada.
         elif(comandoRecebido == 'L'): 
             self.processoBloqueadoParaPronto()
-            '''
             print('🔵Gerenciador🔵 desbloqueou o primeiro processo da fila de bloqueados\n')
-            '''
 
         # Comando I: Imprime o estado atual do sistema.
         elif(comandoRecebido == 'I'):
-            '''
             print('🔵Gerenciador🔵 irá criar o 🟢Impressão🟢\n')
-            '''
 
             # Pipe -> r para leitura e w para escrita
             rpipe, wpipe = os.pipe()
@@ -126,11 +120,12 @@ class ProcessoGerenciador:
 
                 print("\n📑 Memória Virtual:\n")
                 self.memoriaPrimaria.imprimeMemoriaVirtual()
-                '''
+
                 print("\n📑 Parâmetros de Desempenho:\n")
                 self.imprimeResultadosMemoria()
+                
                 print('\n\t\t\t🟢🟢🟢 Finalizando o Processo Impressão! 🟢🟢🟢\n')
-                '''
+
                 exit()
 
         # Comando M: Imprime o tempo médio do ciclo e finaliza o sistema.
@@ -241,9 +236,6 @@ class ProcessoGerenciador:
             print('\n✴️  Proximo processo: %d' % self.estadoPronto[0])
             self.processoSimulado = self.tabelaProcesso.buscarProcesso(self.estadoPronto[0])
             self.CPU.quantumUsado = 0
-            print('1'*50)
-            print('Novo processo')
-            print(self.processoSimulado.idProcesso)
             self.trocaDeContexto(self.processoSimulado)
 
 
@@ -258,8 +250,7 @@ class ProcessoGerenciador:
         if self.processoSimulado == None and len(self.estadoPronto) > 0:
             self.escalonadorDeProcessos()
             print('9'*50)
-        print("ID do Processo:"+str(self.processoSimulado.idProcesso))
-        print("Instruções do processo:" + str(self.processoSimulado.instrucoes))
+        
         if self.processoSimulado != None:
             self.CPU.executarProcesso(self.processoSimulado)
             self.processoSimulado = self.CPU.processoEmExecucao
@@ -374,7 +365,7 @@ class ProcessoGerenciador:
                     self.substituirImagemProcessoAtual(str(instrucaoDividida[1]), self.processoSimulado)
 
             self.tempoCPU += 1
-            print("COMANDO!" + comando)
+
             if comando != 'T':
                 self.processoSimulado.tempoCPU += 1
                 self.tabelaProcesso.atualizarProcesso(self.processoSimulado)
