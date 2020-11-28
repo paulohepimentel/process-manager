@@ -5,23 +5,19 @@ from prettytable import PrettyTable
 class ProcessoControle:
 
     def __init__(self):
-        '''
         print('\n\t\t\t🔴🔴🔴 Iniciando o Processo Controle! 🔴🔴🔴\n')
-        '''
         self.numComandos = 0
         self.criaProcessoControleEGerenciador()
 
 
     # * Menu explicativo referente aos comandos que podem ser recebidos
     def menu(self):
-        '''
         print("Menu de comandos disponíveis:")
         print('➡️  U - Fim de uma unidade de tempo')
         print('➡️  L - Desbloqueia o primeiro processo simulado na fila bloqueada')
         print('➡️  I - Imprime o estado atual do sistema')
         print('➡️  M - Imprime o tempo médio do ciclo e finaliza o sistema')
         print()
-        '''
 
 
     # * Método responsável pela criação processo controle e realizar o fork para
@@ -34,7 +30,6 @@ class ProcessoControle:
         # Processo pai: Processo Controle
         if idProcesso > 0:
             self.menu()
-            '''
             print('Como você gostaria de inserir os comandos?')
             print('➡️  A - Entrada manual')
             print('➡️  B - Arquivo de entrada')
@@ -45,8 +40,6 @@ class ProcessoControle:
                     break
                 else:
                     print('❌ Erro! Opção inválida, tente novamente')
-            '''
-            opcaoEntrada = 'B'
 
             comandos = ''
             if(opcaoEntrada == 'A'):
@@ -65,15 +58,12 @@ class ProcessoControle:
             # Lê do pipe os comandos escritos pelo Processo Controle
             comandosRecebidos = os.read(rpipe, 1000)
             comandosRecebidos = comandosRecebidos.decode()
-
             processoGerenciador = ProcessoGerenciador()
 
             i = 0
             for comando in comandosRecebidos:
                 i+=1
-                '''
                 print('🔵Gerenciador🔵 irá executar agora o comando nº ' + str(i) +': ' + comando)
-                '''
                 processoGerenciador.recebeComandoDoControle(comando)
 
 
@@ -83,8 +73,7 @@ class ProcessoControle:
         comandos = ''
 
         print('\n🤖 Modo entrada manual ativado')
-        # nomeDoArquivo = input("📄  Entre com o nome arquivo: ")
-        nomeDoArquivo = 'cm.txt'
+        nomeDoArquivo = input("📄  Entre com o nome arquivo (cm.txt): ")
 
         arquivo = open(nomeDoArquivo, 'r') # Lietura do arquivo externo
         for comando in arquivo:
@@ -94,10 +83,9 @@ class ProcessoControle:
             else:
                 comandos += comando
         arquivo.close()
-        '''
+
         print('🔰 Lista de comandos recebidos: ', end='')
         print(*comandos, sep =", ")
-        '''
         return comandos
 
     def recebeComandoManual(self):

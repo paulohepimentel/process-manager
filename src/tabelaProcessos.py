@@ -26,7 +26,6 @@ class TabelaProcessos:
             if processo.idProcesso == processoSimulado.idProcesso:
                 processoAntigo = self.listaProcessos.index(processo)
                 break
-
         self.listaProcessos[processoAntigo] = deepcopy(processoSimulado)
 
     def atualizarEstadoProcessoPorIndice(self, idProcesso, estado):
@@ -35,7 +34,6 @@ class TabelaProcessos:
                 processoAntigo = processo
                 processoAntigoIndice = self.listaProcessos.index(processo)
                 break
-
         processoAntigo.estado = estado
         self.listaProcessos[processoAntigoIndice] = deepcopy(processoAntigo)
 
@@ -53,6 +51,7 @@ class TabelaProcessos:
                 processoAntigoIndice = self.listaProcessos.index(processo)
                 processoAntigo.estado = 1 # Pronto
                 self.listaProcessos[processoAntigoIndice] = deepcopy(processoAntigo)
+
 
     # * Métodos relacionados a ordenação de processos na Tabela de Processos
     def ordenarProcessosBloqueados(self):

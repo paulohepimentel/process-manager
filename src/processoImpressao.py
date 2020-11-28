@@ -2,9 +2,8 @@ from prettytable import PrettyTable
 class ProcessoImpressao:
 
     def __init__(self):
-        '''
         print('\t\t\t🟢🟢🟢 Iniciando o Processo Impressão! 🟢🟢🟢\n')
-        '''
+
     def impressaoDetalhada(self, tabelaProcessos):
         if len(tabelaProcessos.retornaLista()) == 0:
             print("\t\tOs processos foram concluídos. A tabela de processos está vazia!")

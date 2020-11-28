@@ -25,7 +25,7 @@ class Memoria:
         print('|', end='')
         for i in self.memoria:
             if i == LIVRE:
-                print(' '+ str(i) + ' |', end='')
+                pass
             else:
                 print(' '+ str(i.idProcesso) + '-' + str(i.nome) + '-' + str(i.valor) + ' |', end='')
         print('\n')
@@ -35,7 +35,7 @@ class Memoria:
         print('|', end='')
         for i in self.memoria:
             if i == LIVRE and contador>=self.tamanho:
-                print(' '+ str(i) + ' |', end='')
+                pass
             elif(contador>=self.tamanho):
                 print(' '+ str(i.idProcesso) + '-' + str(i.nome) + '-' + str(i.valor) + ' |', end='')
             contador+=1

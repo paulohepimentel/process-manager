@@ -17,7 +17,7 @@ class CPU:
 
     def passarQuantum(self):
         self.quantumUsado += 1
-        print('\n\n⏲️  Quantum disponível: '+str(self.quantum[self.processoEmExecucao.prioridade]) + ' --- ⏱️  Quantum usado: ' + str(self.quantumUsado))
+        print('\n⏲️  Quantum disponível: '+str(self.quantum[self.processoEmExecucao.prioridade]) + ' --- ⏱️  Quantum usado: ' + str(self.quantumUsado))
         if (self.quantumUsado < self.quantum[self.processoEmExecucao.prioridade]):
             return False # Não é necessário incrementar a prioridade
         else:
