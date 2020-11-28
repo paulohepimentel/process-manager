@@ -1,6 +1,7 @@
 N 3
 D 0
 D 1
+B
 D 2
 F 1
 R processo2.txt
